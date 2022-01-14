@@ -1,25 +1,24 @@
 import React from "react";
 import CardUI from "../design/CardUI";
 import LeaderUser from "../design/LeaderUser";
-import { useQuery } from "urql";
+import { gql, useQuery } from "@apollo/client";
 import "../styles/index.css";
 
-const LEADER_QUERY = `
-	query Query {
-		leaderBoard {
-			name
-			score
-		}
-	}
+const LEADER_QUERY = gql`
+  query Query {
+    leaderBoard {
+      name
+      score
+    }
+  }
 `;
 
 const LeaderBoard: React.FC = () => {
-  const [result, reexecuteQuery] = useQuery({ query: LEADER_QUERY });
-  const { data, fetching, error } = result;
+  const { loading, error, data } = useQuery(LEADER_QUERY);
 
   return (
     <CardUI>
-      {fetching && <p>loading...</p>}
+      {loading && <p>loading...</p>}
       {error && <p>error...</p>}
       {data && (
         <>

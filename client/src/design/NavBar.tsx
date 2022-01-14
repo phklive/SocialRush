@@ -23,7 +23,7 @@ const NavBar: React.FC<NavBarProps> = () => {
           Leaderboard
         </Link>
 
-        <Link to="/account" className="text-4xl m-4 hover:text-red-500">
+        <Link to="/login" className="text-4xl m-4 hover:text-red-500">
           Connect / Create Account
         </Link>
         <Link

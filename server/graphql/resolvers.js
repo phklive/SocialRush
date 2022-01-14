@@ -1,17 +1,9 @@
-const { User, Card } = require("../database/schemas");
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
+import { User, Card } from "../database/schemas.js";
+import bcrypt from "bcryptjs";
 
 const resolvers = {
   Query: {
-    me: async (_, args, { user }) => {
-      if (!user) {
-        throw new Error("You are not authenticated!");
-      }
-      return await User.findById(user.id);
-    },
-    users: async (_, args, { user }) => {
-      console.log(user);
+    users: async () => {
       return await User.find({});
     },
 
@@ -56,16 +48,7 @@ const resolvers = {
 
       const user = await newUser.save();
 
-      return jwt.sign(
-        {
-          id: user._id,
-          email: user.email,
-        },
-        process.env.JWT_SECRET,
-        {
-          expiresIn: "30d",
-        }
-      );
+      return user;
     },
 
     login: async (_, { email, password }) => {
@@ -81,16 +64,7 @@ const resolvers = {
         throw new Error("Login error...");
       }
 
-      return jwt.sign(
-        {
-          id: user._id,
-          email: user.email,
-        },
-        process.env.JWT_SECRET,
-        {
-          expiresIn: "30d",
-        }
-      );
+      return user;
     },
 
     newCard: async (_, { title, text, answer, author }) => {
@@ -115,4 +89,4 @@ const resolvers = {
   },
 };
 
-module.exports = resolvers;
+export default resolvers;

@@ -1,8 +1,8 @@
-import { useQuery } from "urql";
+import { useQuery, gql, useLazyQuery } from "@apollo/client";
 import CardUI from "../design/CardUI";
 
-const CARD_QUERY = `
-   query Query {
+const CARD_QUERY = gql`
+  query Query {
     randCard {
       title
       text
@@ -37,11 +37,7 @@ const CARD_QUERY = `
 */
 
 const Home: React.FC = () => {
-  const [result, fetch] = useQuery({ query: CARD_QUERY, pause: true });
-
-  const { data, error } = result;
-
-  if (error) return <p>Oh no...{error.message}</p>;
+  const [fetch, { data }] = useLazyQuery(CARD_QUERY);
 
   const clickHandler = (e: boolean) => {
     if (e === data.randCard.answer) {
@@ -56,12 +52,12 @@ const Home: React.FC = () => {
     //show success message and visuals
     //mettre le score quand le jeu commence
     //mettre un timer
-    fetch({ requestPolicy: "network-only" });
+    fetch();
   };
 
   const failure = async () => {
     //Show failure message and visuals
-    fetch({ requestPolicy: "network-only" });
+    fetch();
   };
 
   if (!data) {

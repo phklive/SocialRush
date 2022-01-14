@@ -1,46 +1,34 @@
-const schema = require("./graphql/schema");
-const cors = require("cors");
-const mongoose = require("mongoose");
-const express = require("express");
-const { graphqlHTTP } = require("express-graphql");
-const jwt = require("express-jwt");
-const app = express();
-require("dotenv").config();
+import http from "http";
+import express from "express";
+import connectToDB from "./database/db.js";
+import typeDefs from "./graphql/typeDefs.js";
+import resolvers from "./graphql/resolvers.js";
+import { ApolloServer } from "apollo-server-express";
+import { ApolloServerPluginDrainHttpServer } from "apollo-server-core";
+import "dotenv/config";
 
-const auth = jwt({
-  secret: process.env.JWT_SECRET,
-  algorithms: ["HS256"],
-  credentialsRequired: false,
-});
+async function startApolloServer(typeDefs, resolvers) {
+  const app = express();
+  const httpServer = http.createServer(app);
 
-// Connect to database
-mongoose.connect(process.env.DB, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
-const dataBase = mongoose.connection;
-dataBase.once("open", (_) => {
-  console.log("Database connected:", process.env.DB);
-});
-dataBase.on("error", console.error.bind(console, "MongoDB connection error:"));
+  const port = process.env.PORT || 4000;
 
-app.use(
-  "/api",
-  cors({
-    origin: "http://localhost:3000",
-  }),
-  auth,
-  express.json(),
-  graphqlHTTP((req) => ({
-    schema,
-    graphiql: true,
-    pretty: true,
-    context: {
-      user: req.user || null,
-    },
-  }))
-);
+  connectToDB();
 
-app.listen(process.env.PORT, () => {
-  console.log(`Graphql server up at: ${process.env.PORT}`);
-});
+  const server = new ApolloServer({
+    typeDefs,
+    resolvers,
+    plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
+  });
+
+  await server.start();
+
+  server.applyMiddleware({ app });
+
+  await new Promise((resolve) => httpServer.listen({ port }, resolve));
+  console.log(
+    `🚀 Server ready at http://localhost:${port}${server.graphqlPath}`
+  );
+}
+
+startApolloServer(typeDefs, resolvers);

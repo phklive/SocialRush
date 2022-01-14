@@ -2,9 +2,9 @@ import React, { useRef } from "react";
 import CardUI from "../design/CardUI";
 import "../styles/index.css";
 import { useNavigate } from "react-router";
-import { useMutation } from "urql";
+import { gql, useMutation } from "@apollo/client";
 
-const CREATE_CARD = `
+const CREATE_CARD = gql`
   mutation Mutation(
     $title: String!
     $text: String!
@@ -27,7 +27,7 @@ const CreateCard: React.FC = () => {
 
   const navigate = useNavigate();
 
-  const [_, createCard] = useMutation(CREATE_CARD);
+  const [createCard] = useMutation(CREATE_CARD);
 
   return (
     <CardUI>
@@ -43,7 +43,7 @@ const CreateCard: React.FC = () => {
               answer: answerRef.current?.value.toLocaleLowerCase() === "true",
               author: "paul",
             };
-            createCard(variables);
+            createCard({ variables });
             navigate("/");
           } catch (e) {
             return e;

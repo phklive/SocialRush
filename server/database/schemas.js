@@ -1,24 +1,21 @@
-const mongoose = require('mongoose')
+import mongoose from "mongoose";
 
-const Schema = mongoose.Schema
+const Schema = mongoose.Schema;
 
 const UserSchema = new Schema({
-	id: String,
-	name: String,
-	email: String,
-	password: String,
-	score: Number,
-})
+  id: String,
+  name: String,
+  email: String,
+  password: String,
+  score: Number,
+});
 
 const CardSchema = new Schema({
-	title: String,
-	text: String,
-	answer: Boolean,
-	author: String,
-})
+  title: String,
+  text: String,
+  answer: Boolean,
+  author: String,
+});
 
-const User = mongoose.model('User', UserSchema)
-const Card = mongoose.model('Card', CardSchema)
-
-exports.User = User
-exports.Card = Card
+export const User = mongoose.model("User", UserSchema);
+export const Card = mongoose.model("Card", CardSchema);

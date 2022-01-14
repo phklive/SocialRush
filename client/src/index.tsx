@@ -4,36 +4,33 @@ import NavBar from "./design/NavBar";
 import Home from "./pages/Home";
 import CreateCard from "./pages/CreateCard";
 import Profile from "./pages/Profile";
-import Test from "./pages/Test";
-import Account from "./pages/Account";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
 import LeaderBoard from "./pages/LeaderBoard";
-import { createClient, Provider } from "urql";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
 import "./styles/index.css";
 
-const authLink = () => {
-
-}
-
-const client = createClient({
-  url: "http://localhost:4000/api",
+const client = new ApolloClient({
+  uri: "http://localhost:4000/graphql",
+  cache: new InMemoryCache(),
 });
 
 ReactDOM.render(
   <BrowserRouter>
-    <Provider value={client}>
+    <ApolloProvider client={client}>
       <React.StrictMode>
         <NavBar />
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/test" element={<Test />} />
           <Route path="/leaderboard" element={<LeaderBoard />} />
           <Route path="/createcard" element={<CreateCard />} />
           <Route path="/profile" element={<Profile />} />
-          <Route path="/account" element={<Account />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
         </Routes>
       </React.StrictMode>
-    </Provider>
+    </ApolloProvider>
   </BrowserRouter>,
   document.getElementById("root")
 );

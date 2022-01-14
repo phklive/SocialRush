@@ -1,24 +1,21 @@
-import { useQuery } from "urql";
+import { useQuery, gql } from "@apollo/client";
 import React from "react";
 import "../styles/index.css";
 
-const TEST_QUERY = `
-	query Query($author: String!) {
-		myCards(author: $author) {
-			title
-		}
-	}
+const TEST_QUERY = gql`
+  query Query($author: String!) {
+    myCards(author: $author) {
+      title
+    }
+  }
 `;
 
 const MyCards: React.FC = () => {
-  const [myCardsResult] = useQuery({
-    query: TEST_QUERY,
+  const { loading, error, data } = useQuery(TEST_QUERY, {
     variables: { author: "paul" },
   });
 
-  const { fetching, error, data } = myCardsResult;
-
-  if (fetching) return <p>loading...</p>;
+  if (loading) return <p>loading...</p>;
   if (error) return <p>`error...${error.message}`</p>;
 
   return (
