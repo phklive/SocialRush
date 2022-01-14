@@ -1,8 +1,12 @@
-import React, { useRef } from "react";
+import React from "react";
 import CardUI from "../design/CardUI";
+import { ToastContainer } from "react-toastify";
 import "../styles/index.css";
 import { useNavigate } from "react-router";
 import { gql, useMutation } from "@apollo/client";
+import { useFormik } from "formik";
+import * as Yup from "yup";
+import { newToast } from "../utils/toast";
 
 const CREATE_CARD = gql`
   mutation Mutation(
@@ -21,60 +25,108 @@ const CREATE_CARD = gql`
 `;
 
 const CreateCard: React.FC = () => {
-  const titleRef = useRef<HTMLInputElement>(null);
-  const textRef = useRef<HTMLTextAreaElement>(null);
-  const answerRef = useRef<HTMLSelectElement>(null);
-
   const navigate = useNavigate();
 
   const [createCard] = useMutation(CREATE_CARD);
 
+  const formik = useFormik({
+    initialValues: {
+      title: "",
+      text: "",
+      answer: "true",
+    },
+    validationSchema: Yup.object({
+      title: Yup.string()
+        .max(30, "Title can't be too long.")
+        .required("Title is required."),
+      text: Yup.string()
+        .min(30, "Text can't be too short")
+        .required("Text is required."),
+      answer: Yup.boolean().required("Answer is required."),
+    }),
+    onSubmit: (values) => {
+      const variables = {
+        title: values.title,
+        text: values.text,
+        answer: values.answer === "true",
+        author: "paul",
+      };
+      createCard({ variables });
+      newToast("success", "Success, new card created!", 2000);
+      setTimeout(() => {
+        navigate("/");
+      }, 2000);
+    },
+  });
+
   return (
-    <CardUI>
-      <h1 className="text-4xl self-center m-2">Create your card</h1>
-      <form
-        className="flex flex-col justify-center m-2"
-        onSubmit={(e) => {
-          e.preventDefault();
-          try {
-            const variables = {
-              title: titleRef.current?.value,
-              text: textRef.current?.value,
-              answer: answerRef.current?.value.toLocaleLowerCase() === "true",
-              author: "paul",
-            };
-            createCard({ variables });
-            navigate("/");
-          } catch (e) {
-            return e;
-          }
-        }}
-      >
-        <label htmlFor="title" className="text-3xl m-1">
-          title:
-        </label>
-        <input type="text" name="title" ref={titleRef} />
+    <>
+      <ToastContainer
+        style={{ width: "400px" }}
+        position="top-center"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
 
-        <label htmlFor="text" className="text-3xl m-1">
-          text:
-        </label>
-        <textarea name="text" rows={8} maxLength={500} ref={textRef} />
-
-        <label htmlFor="answer" className="text-3xl m-1">
-          answer:
-        </label>
-        <select name="answer" ref={answerRef}>
-          <option value="true">true</option>
-          <option value="false">false</option>
-        </select>
-        <button
-          type="submit"
-          className="w-1/2 border-black border-2 self-center mt-4 rounded-xl pink hover:bg-pink-300 hover:font-bold"
+      <CardUI>
+        <h1 className="cardTitle">Create your card</h1>
+        <form
+          className="flex flex-col justify-center m-2"
+          onSubmit={formik.handleSubmit}
         >
-          Create Card
-        </button>
-      </form>
-    </CardUI>
+          <label htmlFor="title" className="formLabel">
+            Title:
+          </label>
+          <input
+            type="text"
+            name="title"
+            className="formInput"
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            value={formik.values.title}
+          />
+          {formik.errors.title && formik.touched.title ? (
+            <p className="formError">{formik.errors.title}</p>
+          ) : null}
+          <label htmlFor="text" className="formLabel">
+            Text:
+          </label>
+          <textarea
+            name="text"
+            rows={8}
+            maxLength={500}
+            className="resize-none formInput"
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            value={formik.values.text}
+          />
+          {formik.errors.text && formik.touched.text ? (
+            <p className="formError">{formik.errors.text}</p>
+          ) : null}
+          <label htmlFor="answer" className="formLabel">
+            Answer:
+          </label>
+          <select
+            className="formInput"
+            name="answer"
+            onChange={formik.handleChange}
+            value={formik.values.answer}
+          >
+            <option value="true">True</option>
+            <option value="false">False</option>
+          </select>
+          <button type="submit" className="cardBtn">
+            Create card
+          </button>
+        </form>
+      </CardUI>
+    </>
   );
 };
 

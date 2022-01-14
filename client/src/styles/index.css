@@ -1,20 +1,49 @@
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+
 :root {
-	/*background-image: url(../../assets/background.jpeg);*/
-	background-color: pink;
+  background-image: url("../styles/assets/background.png");
+  font-family: "Roboto", sans-serif;
+  /* background-color: rgb(20, 20, 20); */
 }
 
 .center {
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	margin-right: -50%;
-	transform: translate(-50%, -50%);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-right: -50%;
+  transform: translate(-50%, -50%);
 }
 
 .pink {
-	background-color: pink;
+  background-color: pink;
 }
 
-@import 'tailwindcss/base';
-@import 'tailwindcss/components';
-@import 'tailwindcss/utilities';
+.navBtn {
+  @apply border-4 border-red-300 bg-black rounded-full font-bold text-white text-2xl py-2 px-4 m-2;
+}
+
+.cardBtn {
+  @apply border-2 border-black hover:bg-pink-300 rounded-lg text-3xl mt-4 p-2;
+}
+
+.cardTitle {
+  @apply text-4xl self-center m-2;
+}
+
+.formInput {
+  @apply outline-none p-2 my-2 rounded-lg text-2xl border-2 border-black;
+}
+
+.formLabel {
+  @apply text-3xl m-1;
+}
+
+.formError {
+  @apply text-lg text-red-500 mt-1;
+}
+
+.toast {
+  @apply text-2xl font-bold;
+}

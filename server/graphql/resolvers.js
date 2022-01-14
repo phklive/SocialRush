@@ -55,13 +55,13 @@ const resolvers = {
       const user = await User.findOne({ email });
 
       if (!user) {
-        throw new Error("Login error...");
+        throw new Error("Credentials are incorrect...");
       }
 
       const passwordMatch = await bcrypt.compare(password, user.password);
 
       if (!passwordMatch) {
-        throw new Error("Login error...");
+        throw new Error("Credentials are incorrect...");
       }
 
       return user;

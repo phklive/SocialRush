@@ -1,5 +1,7 @@
-import { useQuery, gql, useLazyQuery } from "@apollo/client";
+import { gql, useLazyQuery } from "@apollo/client";
+import { ToastContainer } from "react-toastify";
 import CardUI from "../design/CardUI";
+import { newToast } from "../utils/toast";
 
 const CARD_QUERY = gql`
   query Query {
@@ -18,10 +20,8 @@ const CARD_QUERY = gql`
 - create my card section
 - create account info section / profile
 - create connection and account creation page forms
-- add animation of success or failure on game answer
 - finish success and failure logic 
 - home card aesthetic and size 
-- whole app design / Fiverr - css
 - add score that updates on right and wrong answer
 - add 3 lives and when they go to 0 game stops
 - add score to database on end of game
@@ -49,14 +49,14 @@ const Home: React.FC = () => {
 
   const success = async () => {
     //access user.score and add 1 if true else add 0
-    //show success message and visuals
     //mettre le score quand le jeu commence
     //mettre un timer
+    newToast("success", "True!", 2000);
     fetch();
   };
 
   const failure = async () => {
-    //Show failure message and visuals
+    newToast("error", "False!", 2000);
     fetch();
   };
 
@@ -72,24 +72,38 @@ const Home: React.FC = () => {
   }
 
   return (
-    <CardUI>
-      <h1 className="text-4xl mb-28 mt-2 self-center">{data.randCard.title}</h1>
-      <p className="text-3xl self-center">{data.randCard.text}</p>
-      <div className="flex mt-20 mb-2 gap-2 h-1/8">
-        <button
-          className="pink border-black border-2 rounded-xl w-9/12 ml-2 hover:bg-pink-300 hover:font-bold"
-          onClick={() => clickHandler(true)}
-        >
-          <h1 className="text-2xl">True</h1>
-        </button>
-        <button
-          className="pink border-black border-2 rounded-xl w-9/12 mr-2 hover:bg-pink-300 hover:font-bold"
-          onClick={() => clickHandler(false)}
-        >
-          <h1 className="text-2xl">False</h1>
-        </button>
-      </div>
-    </CardUI>
+    <>
+      <ToastContainer
+        position="top-center"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
+
+      <CardUI>
+        <h1 className="cardTitle">{data.randCard.title}</h1>
+        <p className="text-3xl self-center mt-16">{data.randCard.text}</p>
+        <div className="flex mt-20 mb-2 gap-2 h-1/8">
+          <button
+            className="cardBtn  w-9/12 mr-2"
+            onClick={() => clickHandler(true)}
+          >
+            <h1 className="text-2xl">True</h1>
+          </button>
+          <button
+            className="cardBtn w-9/12 mr-2"
+            onClick={() => clickHandler(false)}
+          >
+            <h1 className="text-2xl">False</h1>
+          </button>
+        </div>
+      </CardUI>
+    </>
   );
 };
 

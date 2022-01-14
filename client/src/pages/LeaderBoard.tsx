@@ -22,7 +22,7 @@ const LeaderBoard: React.FC = () => {
       {error && <p>error...</p>}
       {data && (
         <>
-          <h1 className="text-4xl m-2 self-center">Leaderboard</h1>
+          <h1 className="cardTitle">Leaderboard</h1>
           <div>
             {data.leaderBoard.map((user: any, i: number) => {
               return (
