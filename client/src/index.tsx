@@ -8,6 +8,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import LeaderBoard from "./pages/LeaderBoard";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { ProtectedRoute } from './utils/auth'
 import {
   ApolloClient,
   InMemoryCache,
@@ -16,6 +17,7 @@ import {
 } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
 import "./styles/index.css";
+import NotFound from "./pages/NotFound";
 
 const httpLink = createHttpLink({
   uri: "http://localhost:4000/graphql",
@@ -45,10 +47,13 @@ ReactDOM.render(
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/leaderboard" element={<LeaderBoard />} />
-          <Route path="/createcard" element={<CreateCard />} />
-          <Route path="/profile" element={<Profile />} />
+          <Route element={<ProtectedRoute/>}>
+            <Route path="/createcard" element={<CreateCard />} />
+            <Route path="/profile" element={<Profile />} />
+          </Route>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </React.StrictMode>
     </ApolloProvider>

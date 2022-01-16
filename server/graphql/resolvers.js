@@ -4,8 +4,23 @@ import bcrypt from "bcryptjs";
 
 const resolvers = {
   Query: {
+    user: async (_, args, {req}) => {
+      if (!req.user) {
+        throw new Error("You are not authenticated!")
+      }
+      return await User.findOne({name: req.user.name})
+    },
+
     users: async () => {
       return await User.find({});
+    },
+
+    card: async (_, {title}) => {
+      const card = await Card.findOne({title})
+      if (!card) {
+        throw new Error("Card not found.")
+      }
+      return card 
     },
 
     cards: async () => {
@@ -21,8 +36,11 @@ const resolvers = {
       return await User.find({}).sort({ score: -1 }).limit(10);
     },
 
-    myCards: async (_, { author }) => {
-      return await Card.find({ author });
+    myCards: async (_, args, { req }) => {
+      if (!req.user) {
+        throw new Error("You are not logged in!")
+      }
+      return await Card.find({ author: req.user.name })
     },
   },
 
@@ -53,6 +71,7 @@ const resolvers = {
         {
           id: user._id,
           email: user.email,
+          name: user.name
         },
         process.env.JWT_SECRET,
         {
@@ -78,6 +97,7 @@ const resolvers = {
         {
           id: user._id,
           email: user.email,
+          name: user.name
         },
         process.env.JWT_SECRET,
         {
@@ -86,15 +106,18 @@ const resolvers = {
       );
     },
 
-    newCard: async (_, { title, text, answer, author }) => {
+    newCard: async (_, { title, text, answer }, { req }) => {
+      if (!req.user) {
+        throw new Error("You are not authenticated!")
+      }
       const newCard = new Card({
         title,
         text,
         answer,
-        author,
+        author: req.user.name,
       });
-      const res = await newCard.save();
-      return res;
+        return await newCard.save();
+      
     },
 
     addScore: async (_, { name }) => {

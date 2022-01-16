@@ -14,7 +14,7 @@ const LEADER_QUERY = gql`
 `;
 
 const LeaderBoard: React.FC = () => {
-  const { loading, error, data } = useQuery(LEADER_QUERY);
+  const { loading, error, data } = useQuery(LEADER_QUERY, {fetchPolicy: 'no-cache'});
 
   return (
     <CardUI>

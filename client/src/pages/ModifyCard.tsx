@@ -2,29 +2,35 @@ import React from "react";
 import CardUI from "../design/CardUI";
 import "../styles/index.css";
 import { useNavigate } from "react-router";
-import { gql, useMutation } from "@apollo/client";
+import { gql, useMutation, useQuery } from "@apollo/client";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { newToast } from "../utils/toast";
 
-const CREATE_CARD_MUTATION = gql`
-mutation Mutation($title: String!, $text: String!, $answer: Boolean!) {
-  newCard(title: $title, text: $text, answer: $answer) {
+const MODIFY_QUERY = gql`
+query Card($title: String!) {
+  card(title: $title) {
     title
+    text
+    answer
+    author
   }
 }
+`
+const MODIFY_CARD_MUTATION = gql`
+
 `;
 
-const CreateCard: React.FC = () => {
+const ModifyCard: React.FC = () => {
   const navigate = useNavigate();
-
-  const [createCard] = useMutation(CREATE_CARD_MUTATION)
+  const {data} = useQuery(MODIFY_QUERY)
+  const [modifyCard] = useMutation(MODIFY_CARD_MUTATION)
 
   const formik = useFormik({
     initialValues: {
-      title: "",
-      text: "",
-      answer: "true",
+      title: data.card.title,
+      text: data.card.text,
+      answer: data.card.answer,
     },
     validationSchema: Yup.object({
       title: Yup.string()
@@ -41,7 +47,7 @@ const CreateCard: React.FC = () => {
         text: values.text,
         answer: values.answer === "true",
       };
-      createCard({ variables });
+      modifyCard({ variables });
       newToast("success", "Success, new card created!", 2000);
       setTimeout(() => {
         navigate("/profile");
@@ -105,4 +111,4 @@ const CreateCard: React.FC = () => {
   );
 };
 
-export default CreateCard;
+export default ModifyCard;

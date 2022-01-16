@@ -1,7 +1,7 @@
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-export const newToast = (value, message, time) => {
+export const newToast = (value:string, message:string, time:number) => {
   if (value === "success") {
     toast.success(message, {
       className: "toast",
@@ -27,3 +27,4 @@ export const newToast = (value, message, time) => {
     });
   }
 };
+

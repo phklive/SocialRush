@@ -7,7 +7,7 @@ import * as Yup from "yup";
 import { useFormik } from "formik";
 import { newToast } from "../utils/toast";
 
-const LOGIN_QUERY = gql`
+const LOGIN_MUTATION = gql`
   mutation Mutation($email: String!, $password: String!) {
     login(email: $email, password: $password)
   }
@@ -15,7 +15,7 @@ const LOGIN_QUERY = gql`
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
-  const [login] = useMutation(LOGIN_QUERY);
+  const [login] = useMutation(LOGIN_MUTATION);
 
   const loginHandler = async (email: string, password: string) => {
     try {
@@ -23,7 +23,7 @@ const Login: React.FC = () => {
       newToast("success", "Successfully logged in!", 2000);
       localStorage.setItem("token", res.data.login);
       setTimeout(() => {
-        navigate("/");
+        navigate("/profile");
       }, 2000);
     } catch (e: any) {
       newToast("error", e.message, 2000);

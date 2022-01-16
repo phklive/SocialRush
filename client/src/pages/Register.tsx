@@ -9,12 +9,7 @@ import { newToast } from "../utils/toast";
 
 const REGISTER_QUERY = gql`
   mutation Mutation($name: String!, $email: String!, $password: String!) {
-    register(name: $name, email: $email, password: $password) {
-      _id
-      name
-      email
-      password
-    }
+    register(name: $name, email: $email, password: $password) 
   }
 `;
 
@@ -28,10 +23,11 @@ const Register: React.FC = () => {
     password: string
   ) => {
     try {
-      await register({ variables: { name, email, password } });
+      const res = await register({ variables: { name, email, password } });
       newToast("success", "Account successfully created!", 2000);
+      localStorage.setItem("token", res.data.register);
       setTimeout(() => {
-        navigate("/");
+        navigate("/profile");
       }, 2000);
     } catch (e: any) {
       newToast("error", e.message, 2000);
@@ -53,6 +49,7 @@ const Register: React.FC = () => {
       password: Yup.string().required("Password is required."),
     }),
     onSubmit: (values) => {
+      console.log(values)
       registrationHandler(values.name, values.email, values.password);
     },
   });

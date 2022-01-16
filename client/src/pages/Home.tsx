@@ -1,4 +1,5 @@
 import { gql, useLazyQuery } from "@apollo/client";
+import { useNavigate  } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import CardUI from "../design/CardUI";
 import { newToast } from "../utils/toast";
@@ -13,6 +14,7 @@ const CARD_QUERY = gql`
     }
   }
 `;
+
 
 /*
 - responsive 
@@ -39,6 +41,7 @@ const CARD_QUERY = gql`
 */
 
 const Home: React.FC = () => {
+  const navigate = useNavigate()
   const [fetch, { data }] = useLazyQuery(CARD_QUERY);
 
   const clickHandler = (e: boolean) => {
@@ -62,11 +65,23 @@ const Home: React.FC = () => {
     fetch();
   };
 
+  const playHandler = () => {
+    try {
+      if (!localStorage.hasOwnProperty('token')) throw new Error("You must be logged in to play.")
+      fetch()
+    } catch (e:any) {
+      newToast('error',e.message, 2000)
+        setTimeout(() => {
+          navigate('/login')
+        }, 2000);
+    }
+  }
+
   if (!data) {
     return (
       <>
         <ToastContainer
-          style={{ width: "400px" }}
+          style={{ width: "500px" }}
           position="top-center"
           autoClose={5000}
           hideProgressBar={false}
@@ -79,9 +94,11 @@ const Home: React.FC = () => {
         />
         <button
           className="center pink border-black border-2 rounded-xl h-1/2 w-1/2 ml-2 hover:bg-pink-300 hover:font-bold"
-          onClick={() => fetch()}
+          onClick={() => { playHandler() }}
         >
           <h1 className="cardTitle">PLAY</h1>
+          <h1 className="cardTitle">{}</h1>
+          <h1 className="cardTitle">{}</h1>
         </button>
       </>
     );

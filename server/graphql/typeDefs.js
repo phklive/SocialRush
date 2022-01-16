@@ -2,11 +2,13 @@ import { gql } from "apollo-server-express";
 
 const typeDefs = gql`
   type Query {
+    user: User
     users: [User!]!
+    card(title: String!): Card
     cards: [Card!]!
     randCard: Card!
     leaderBoard: [User!]!
-    myCards(author: String!): [Card!]!
+    myCards: [Card!]!
   }
 
   type Mutation {
@@ -17,7 +19,6 @@ const typeDefs = gql`
       title: String!
       text: String!
       answer: Boolean!
-      author: String!
     ): Card!
   }
 

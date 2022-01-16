@@ -1,6 +1,7 @@
 import http from "http";
 import express from "express";
 import connectToDB from "./database/db.js";
+import helmet from 'helmet'
 import typeDefs from "./graphql/typeDefs.js";
 import resolvers from "./graphql/resolvers.js";
 import jwt from "express-jwt";
@@ -12,7 +13,7 @@ async function startApolloServer(typeDefs, resolvers) {
   const app = express();
   const httpServer = http.createServer(app);
   const port = process.env.PORT || 4000;
-  const auth = jwt({
+  const checkJwt = jwt({
     secret: process.env.JWT_SECRET,
     algorithms: ["HS256"],
     credentialsRequired: false,
@@ -23,14 +24,17 @@ async function startApolloServer(typeDefs, resolvers) {
   const server = new ApolloServer({
     typeDefs,
     resolvers,
+    context: (req) => {
+      return req 
+    },
     plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
   });
 
   await server.start();
 
-  app.use(auth);
+  app.use(helmet(),checkJwt);
 
-  server.applyMiddleware({ app });
+  server.applyMiddleware({ app, path: '/' });
 
   await new Promise((resolve) => httpServer.listen({ port }, resolve));
   console.log(

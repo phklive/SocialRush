@@ -12,22 +12,10 @@ const connectDB = async () => {
 
 export const testUsers = [
 	{
-		name: 'paul',
-		email: 'paul@gmail.com',
-		password: 'very strong password',
-		score: 100,
-	},
-	{
 		name: 'lelia',
 		email: 'lelia@gmail.com',
 		password: 'very very strong password',
 		score: 12,
-	},
-	{
-		name: 'canard',
-		email: 'canard@gmail.com',
-		password: 'very very strong password',
-		score: 43,
 	},
 	{
 		name: 'poulet',
@@ -44,12 +32,6 @@ export const testUsers = [
 ]
 
 export const testCards = [
-	{
-		title: 'testCard 1',
-		text: 'this is the text for the testcard 1',
-		answer: false,
-		author: 'paul',
-	},
 	{
 		title: 'testCard 2',
 
