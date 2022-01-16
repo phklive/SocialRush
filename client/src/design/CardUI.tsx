@@ -1,4 +1,5 @@
 import React from "react";
+import { ToastContainer } from "react-toastify";
 import "../styles/index.css";
 
 interface CardUIProps {
@@ -7,9 +8,23 @@ interface CardUIProps {
 
 const CardUI: React.FC<CardUIProps> = ({ children }) => {
   return (
-    <div className="center  pink p-2 max-h-fit w-1/2 rounded-xl flex flex-col border-gray-400 border-4">
-      {children}
-    </div>
+    <>
+      <ToastContainer
+        style={{ width: "400px" }}
+        position="top-center"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
+      <div className="center  pink p-2 max-h-fit w-1/2 rounded-xl flex flex-col border-gray-400 border-4">
+        {children}
+      </div>
+    </>
   );
 };
 

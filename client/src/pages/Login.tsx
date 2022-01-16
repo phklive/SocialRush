@@ -5,17 +5,11 @@ import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
 import * as Yup from "yup";
 import { useFormik } from "formik";
-import { ToastContainer } from "react-toastify";
 import { newToast } from "../utils/toast";
 
 const LOGIN_QUERY = gql`
   mutation Mutation($email: String!, $password: String!) {
-    login(email: $email, password: $password) {
-      _id
-      name
-      email
-      password
-    }
+    login(email: $email, password: $password)
   }
 `;
 
@@ -25,8 +19,9 @@ const Login: React.FC = () => {
 
   const loginHandler = async (email: string, password: string) => {
     try {
-      await login({ variables: { email, password } });
+      const res = await login({ variables: { email, password } });
       newToast("success", "Successfully logged in!", 2000);
+      localStorage.setItem("token", res.data.login);
       setTimeout(() => {
         navigate("/");
       }, 2000);
@@ -50,62 +45,48 @@ const Login: React.FC = () => {
   });
 
   return (
-    <>
-      <ToastContainer
-        style={{ width: "400px" }}
-        position="top-center"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-      />
-      <CardUI>
-        <h1 className="cardTitle">Login</h1>
-        <form className="flex flex-col m-2" onSubmit={formik.handleSubmit}>
-          <label htmlFor="email" className="formLabel">
-            Email:
-          </label>
-          <input
-            type="email"
-            name="email"
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            value={formik.values.email}
-            className="formInput"
-          />
-          {formik.errors.email && formik.touched.email ? (
-            <p className="formError">{formik.errors.email}</p>
-          ) : null}
-          <label htmlFor="password" className="formLabel">
-            Password:
-          </label>
-          <input
-            type="password"
-            name="password"
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            value={formik.values.password}
-            className="formInput"
-          />
-          {formik.errors.password && formik.touched.password ? (
-            <p className="formError">{formik.errors.password}</p>
-          ) : null}
-          <Link
-            className="mt-2 self-center hover:text-blue-800 text-2xl"
-            to="/register"
-          >
-            Need to create an account?
-          </Link>
-          <button type="submit" className="cardBtn">
-            Login
-          </button>
-        </form>
-      </CardUI>
-    </>
+    <CardUI>
+      <h1 className="cardTitle">Login</h1>
+      <form className="flex flex-col m-2" onSubmit={formik.handleSubmit}>
+        <label htmlFor="email" className="formLabel">
+          Email:
+        </label>
+        <input
+          type="email"
+          name="email"
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          value={formik.values.email}
+          className="formInput"
+        />
+        {formik.errors.email && formik.touched.email ? (
+          <p className="formError">{formik.errors.email}</p>
+        ) : null}
+        <label htmlFor="password" className="formLabel">
+          Password:
+        </label>
+        <input
+          type="password"
+          name="password"
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          value={formik.values.password}
+          className="formInput"
+        />
+        {formik.errors.password && formik.touched.password ? (
+          <p className="formError">{formik.errors.password}</p>
+        ) : null}
+        <Link
+          className="mt-2 self-center hover:text-blue-800 text-2xl"
+          to="/register"
+        >
+          Need to create an account?
+        </Link>
+        <button type="submit" className="cardBtn">
+          Login
+        </button>
+      </form>
+    </CardUI>
   );
 };
 

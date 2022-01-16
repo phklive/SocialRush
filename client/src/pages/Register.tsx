@@ -5,7 +5,6 @@ import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
 import * as Yup from "yup";
 import { useFormik } from "formik";
-import { ToastContainer } from "react-toastify";
 import { newToast } from "../utils/toast";
 
 const REGISTER_QUERY = gql`
@@ -59,77 +58,63 @@ const Register: React.FC = () => {
   });
 
   return (
-    <>
-      <ToastContainer
-        style={{ width: "400px" }}
-        position="top-center"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-      />
-      <CardUI>
-        <h1 className="cardTitle">Register</h1>
-        <form className="flex flex-col m-2" onSubmit={formik.handleSubmit}>
-          <label htmlFor="name" className="formLabel">
-            Name:
-          </label>
-          <input
-            type="text"
-            name="name"
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            value={formik.values.name}
-            className="formInput"
-          />
-          {formik.errors.name && formik.touched.name ? (
-            <p className="formError">{formik.errors.name}</p>
-          ) : null}
+    <CardUI>
+      <h1 className="cardTitle">Register</h1>
+      <form className="flex flex-col m-2" onSubmit={formik.handleSubmit}>
+        <label htmlFor="name" className="formLabel">
+          Name:
+        </label>
+        <input
+          type="text"
+          name="name"
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          value={formik.values.name}
+          className="formInput"
+        />
+        {formik.errors.name && formik.touched.name ? (
+          <p className="formError">{formik.errors.name}</p>
+        ) : null}
 
-          <label htmlFor="email" className="formLabel">
-            Email:
-          </label>
-          <input
-            type="email"
-            name="email"
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            value={formik.values.email}
-            className="formInput"
-          />
-          {formik.errors.email && formik.touched.email ? (
-            <p className="formError">{formik.errors.email}</p>
-          ) : null}
-          <label htmlFor="password" className="formLabel">
-            Password:
-          </label>
-          <input
-            type="password"
-            name="password"
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            value={formik.values.password}
-            className="formInput"
-          />
-          {formik.errors.password && formik.touched.password ? (
-            <p className="formError">{formik.errors.password}</p>
-          ) : null}
-          <Link
-            className="mt-2 self-center hover:text-blue-800 text-2xl"
-            to="/login"
-          >
-            Already have an account?
-          </Link>
-          <button type="submit" className="cardBtn">
-            Register
-          </button>
-        </form>
-      </CardUI>
-    </>
+        <label htmlFor="email" className="formLabel">
+          Email:
+        </label>
+        <input
+          type="email"
+          name="email"
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          value={formik.values.email}
+          className="formInput"
+        />
+        {formik.errors.email && formik.touched.email ? (
+          <p className="formError">{formik.errors.email}</p>
+        ) : null}
+        <label htmlFor="password" className="formLabel">
+          Password:
+        </label>
+        <input
+          type="password"
+          name="password"
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          value={formik.values.password}
+          className="formInput"
+        />
+        {formik.errors.password && formik.touched.password ? (
+          <p className="formError">{formik.errors.password}</p>
+        ) : null}
+        <Link
+          className="mt-2 self-center hover:text-blue-800 text-2xl"
+          to="/login"
+        >
+          Already have an account?
+        </Link>
+        <button type="submit" className="cardBtn">
+          Register
+        </button>
+      </form>
+    </CardUI>
   );
 };
 

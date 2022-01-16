@@ -3,6 +3,7 @@ import express from "express";
 import connectToDB from "./database/db.js";
 import typeDefs from "./graphql/typeDefs.js";
 import resolvers from "./graphql/resolvers.js";
+import jwt from "express-jwt";
 import { ApolloServer } from "apollo-server-express";
 import { ApolloServerPluginDrainHttpServer } from "apollo-server-core";
 import "dotenv/config";
@@ -10,8 +11,12 @@ import "dotenv/config";
 async function startApolloServer(typeDefs, resolvers) {
   const app = express();
   const httpServer = http.createServer(app);
-
   const port = process.env.PORT || 4000;
+  const auth = jwt({
+    secret: process.env.JWT_SECRET,
+    algorithms: ["HS256"],
+    credentialsRequired: false,
+  });
 
   connectToDB();
 
@@ -22,6 +27,8 @@ async function startApolloServer(typeDefs, resolvers) {
   });
 
   await server.start();
+
+  app.use(auth);
 
   server.applyMiddleware({ app });
 

@@ -1,13 +1,15 @@
-import React from 'react'
-import CardUI from '../design/CardUI'
-import MyCards from './MyCards'
+import React from "react";
+import CardUI from "../design/CardUI";
+import MyCards from "./MyCards";
 
 const Profile: React.FC = () => {
-	return (
-		<CardUI>
-			<MyCards />
-		</CardUI>
-	)
-}
+  return (
+    <CardUI>
+      <h1 className="cardTitle">My Profile</h1>
 
-export default Profile
+      <MyCards />
+    </CardUI>
+  );
+};
+
+export default Profile;

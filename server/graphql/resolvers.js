@@ -1,4 +1,5 @@
 import { User, Card } from "../database/schemas.js";
+import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 
 const resolvers = {
@@ -48,7 +49,16 @@ const resolvers = {
 
       const user = await newUser.save();
 
-      return user;
+      return jwt.sign(
+        {
+          id: user._id,
+          email: user.email,
+        },
+        process.env.JWT_SECRET,
+        {
+          expiresIn: "1h",
+        }
+      );
     },
 
     login: async (_, { email, password }) => {
@@ -64,7 +74,16 @@ const resolvers = {
         throw new Error("Credentials are incorrect...");
       }
 
-      return user;
+      return jwt.sign(
+        {
+          id: user._id,
+          email: user.email,
+        },
+        process.env.JWT_SECRET,
+        {
+          expiresIn: "1h",
+        }
+      );
     },
 
     newCard: async (_, { title, text, answer, author }) => {

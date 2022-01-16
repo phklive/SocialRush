@@ -20,6 +20,10 @@
   background-color: pink;
 }
 
+.darkWhite {
+  background-color: #f2eded;
+}
+
 .navBtn {
   @apply border-4 border-red-300 bg-black rounded-full font-bold text-white text-2xl py-2 px-4 m-2;
 }
@@ -29,11 +33,11 @@
 }
 
 .cardTitle {
-  @apply text-4xl self-center m-2;
+  @apply text-4xl self-center m-2 underline;
 }
 
 .formInput {
-  @apply outline-none p-2 my-2 rounded-lg text-2xl border-2 border-black;
+  @apply outline-none p-2 my-2 rounded-lg text-2xl border-2 border-black darkWhite;
 }
 
 .formLabel {
@@ -46,4 +50,8 @@
 
 .toast {
   @apply text-2xl font-bold;
+}
+
+.active {
+  @apply border-pink-500;
 }

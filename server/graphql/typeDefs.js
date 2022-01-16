@@ -10,8 +10,8 @@ const typeDefs = gql`
   }
 
   type Mutation {
-    register(name: String!, email: String!, password: String!): User!
-    login(email: String!, password: String!): User!
+    register(name: String!, email: String!, password: String!): String!
+    login(email: String!, password: String!): String!
     addScore(name: String!): User!
     newCard(
       title: String!

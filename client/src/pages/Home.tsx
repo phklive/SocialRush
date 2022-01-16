@@ -17,6 +17,8 @@ const CARD_QUERY = gql`
 /*
 - responsive 
 - pagination
+- Make toast appear on navigated page
+- Add authentication to the app
 - create my card section
 - create account info section / profile
 - create connection and account creation page forms
@@ -51,59 +53,59 @@ const Home: React.FC = () => {
     //access user.score and add 1 if true else add 0
     //mettre le score quand le jeu commence
     //mettre un timer
-    newToast("success", "True!", 2000);
+    newToast("success", "Correct!", 2000);
     fetch();
   };
 
   const failure = async () => {
-    newToast("error", "False!", 2000);
+    newToast("error", "Wrong!", 2000);
     fetch();
   };
 
   if (!data) {
     return (
-      <button
-        className="center pink border-black border-2 rounded-xl h-1/2 w-1/2 ml-2 hover:bg-pink-300 hover:font-bold"
-        onClick={() => fetch()}
-      >
-        <h1 className="text-3xl">PLAY</h1>
-      </button>
+      <>
+        <ToastContainer
+          style={{ width: "400px" }}
+          position="top-center"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+        />
+        <button
+          className="center pink border-black border-2 rounded-xl h-1/2 w-1/2 ml-2 hover:bg-pink-300 hover:font-bold"
+          onClick={() => fetch()}
+        >
+          <h1 className="cardTitle">PLAY</h1>
+        </button>
+      </>
     );
   }
 
   return (
-    <>
-      <ToastContainer
-        position="top-center"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-      />
-
-      <CardUI>
-        <h1 className="cardTitle">{data.randCard.title}</h1>
-        <p className="text-3xl self-center mt-16">{data.randCard.text}</p>
-        <div className="flex mt-20 mb-2 gap-2 h-1/8">
-          <button
-            className="cardBtn  w-9/12 mr-2"
-            onClick={() => clickHandler(true)}
-          >
-            <h1 className="text-2xl">True</h1>
-          </button>
-          <button
-            className="cardBtn w-9/12 mr-2"
-            onClick={() => clickHandler(false)}
-          >
-            <h1 className="text-2xl">False</h1>
-          </button>
-        </div>
-      </CardUI>
-    </>
+    <CardUI>
+      <h1 className="cardTitle">{data.randCard.title}</h1>
+      <p className="text-3xl self-center mt-16">{data.randCard.text}</p>
+      <div className="flex mt-20 mb-2 gap-2 h-1/8">
+        <button
+          className="cardBtn  w-9/12 mr-2"
+          onClick={() => clickHandler(true)}
+        >
+          <h1 className="text-2xl">True</h1>
+        </button>
+        <button
+          className="cardBtn w-9/12 mr-2"
+          onClick={() => clickHandler(false)}
+        >
+          <h1 className="text-2xl">False</h1>
+        </button>
+      </div>
+    </CardUI>
   );
 };
 
