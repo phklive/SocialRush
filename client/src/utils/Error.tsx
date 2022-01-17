@@ -1,10 +1,14 @@
 import CardUI from '../design/CardUI'
 
-const ErrorMessage = (error: string) => {
+interface ErrorMessageProps {
+  message: string 
+}
+
+const ErrorMessage: React.FC<ErrorMessageProps> = ({message}) => {
   return (
     <CardUI>
       <p className="self-center">
-        {error}
+        {message}
       </p>
     </CardUI>
   )

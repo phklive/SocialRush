@@ -20,10 +20,13 @@ const typeDefs = gql`
       text: String!
       answer: Boolean!
     ): Card!
+    modifyCard(id:ID!, title:String!, text:String!, answer:Boolean!):Card!
+    deleteCard(id:ID!):Card!
   }
 
   type User {
     _id: ID!
+    id: ID!
     name: String!
     email: String!
     password: String!
@@ -31,6 +34,7 @@ const typeDefs = gql`
   }
 
   type Card {
+    id: ID!
     title: String!
     text: String!
     answer: Boolean!

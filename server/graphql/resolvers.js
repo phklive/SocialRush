@@ -1,6 +1,7 @@
 import { User, Card } from "../database/schemas.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
+import {v4 as uuidv4} from 'uuid'
 
 const resolvers = {
   Query: {
@@ -59,6 +60,7 @@ const resolvers = {
       }
 
       const newUser = new User({
+        id: uuidv4(),
         name,
         email,
         password: await bcrypt.hash(password, 10),
@@ -111,6 +113,7 @@ const resolvers = {
         throw new Error("You are not authenticated!")
       }
       const newCard = new Card({
+        id: uuidv4(),
         title,
         text,
         answer,
@@ -118,6 +121,14 @@ const resolvers = {
       });
         return await newCard.save();
       
+    },
+
+    modifyCard: async (_,{id,title,text,answer}) => {
+      return Card.findOneAndUpdate({ id }, {title, text, answer}, {new: true})
+    },
+
+    deleteCard: async (_,{id}) => {
+      return Card.findOneAndDelete({id})
     },
 
     addScore: async (_, { name }) => {

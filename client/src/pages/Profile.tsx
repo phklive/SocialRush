@@ -19,7 +19,7 @@ const Profile: React.FC = () => {
 
   return (
     <CardUI>
-      <h1 className="cardTitle">My Profile</h1>
+      <h1 className="cardTitle">My profile</h1>
       <div className="p-2">
         <h1 className="text-2xl font-semibold">hello {user.name},</h1>
       </div>

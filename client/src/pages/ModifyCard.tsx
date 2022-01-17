@@ -1,36 +1,35 @@
 import React from "react";
 import CardUI from "../design/CardUI";
 import "../styles/index.css";
-import { useNavigate } from "react-router";
-import { gql, useMutation, useQuery } from "@apollo/client";
+import { useNavigate, useLocation } from "react-router";
+import { gql, useMutation } from "@apollo/client";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { newToast } from "../utils/toast";
 
-const MODIFY_QUERY = gql`
-query Card($title: String!) {
-  card(title: $title) {
+
+const MODIFY_CARD_MUTATION = gql`
+mutation Mutation($id: ID!, $title: String!, $text: String!, $answer: Boolean!) {
+  modifyCard(id: $id, title: $title, text: $text, answer: $answer) {
+    id
     title
     text
     answer
-    author
   }
 }
-`
-const MODIFY_CARD_MUTATION = gql`
-
 `;
 
 const ModifyCard: React.FC = () => {
+  const { state }: any = useLocation()
+  const answer = state.answer.toString()
   const navigate = useNavigate();
-  const {data} = useQuery(MODIFY_QUERY)
   const [modifyCard] = useMutation(MODIFY_CARD_MUTATION)
 
   const formik = useFormik({
     initialValues: {
-      title: data.card.title,
-      text: data.card.text,
-      answer: data.card.answer,
+      title: state.title,
+      text: state.text,
+      answer
     },
     validationSchema: Yup.object({
       title: Yup.string()
@@ -41,23 +40,30 @@ const ModifyCard: React.FC = () => {
         .required("Text is required."),
       answer: Yup.boolean().required("Answer is required."),
     }),
-    onSubmit: (values) => {
-      const variables = {
-        title: values.title,
-        text: values.text,
-        answer: values.answer === "true",
-      };
-      modifyCard({ variables });
-      newToast("success", "Success, new card created!", 2000);
-      setTimeout(() => {
-        navigate("/profile");
-      }, 2000);
+    onSubmit: async (values) => {
+      try {
+        const variables = {
+          id: state.id,
+          title: values.title,
+          text: values.text,
+          answer: values.answer === 'true',
+        };
+        console.log(variables)
+        const res = await modifyCard({ variables });
+        console.log(res.data.modifyCard)
+        newToast("success", "Success, card modified!", 2000);
+        setTimeout(() => {
+          navigate("/profile");
+        }, 2000);
+      } catch (e: any) {
+        newToast("error", e.message, 2000)
+      }
     },
   });
 
   return (
     <CardUI>
-      <h1 className="cardTitle">Create your card</h1>
+      <h1 className="cardTitle">Modify your card</h1>
       <form
         className="flex flex-col justify-center m-2"
         onSubmit={formik.handleSubmit}
@@ -103,9 +109,14 @@ const ModifyCard: React.FC = () => {
           <option value="true">True</option>
           <option value="false">False</option>
         </select>
-        <button type="submit" className="cardBtn">
-          Create card
-        </button>
+        <div className="flex flex-row gap-2">
+        <button type="reset" className="cardBtn flex-1" onClick={() => {navigate('/profile')}}>
+            Cancel
+          </button>
+          <button type="submit" className="cardBtn flex-1">
+            Modify card
+          </button>
+        </div>
       </form>
     </CardUI>
   );

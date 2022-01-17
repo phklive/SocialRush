@@ -3,15 +3,18 @@ import React  from "react";
 import Card from "../design/Card";
 import "../styles/index.css";
 
-const MYCARDS_QUERY = gql`
+export const MYCARDS_QUERY = gql`
   query Query {
     myCards {
+      id
       title
+      text
+      answer
     }
   }
 `;
 
-export const MyCards: React.FC = () => {
+const MyCards: React.FC = () => {
   const { loading, error, data } = useQuery(MYCARDS_QUERY, { fetchPolicy: 'no-cache' });
 
   if (loading) return <p>loading...</p>;
@@ -19,7 +22,7 @@ export const MyCards: React.FC = () => {
 
   return (
     <div className="pink p-2">
-    {data.myCards.map((card: any, i: number) => <Card key={i} title={card.title}/>)}
+    {data.myCards.map((card: any) => <Card key={card.id} id={card.id} title={card.title} text={card.text} answer={card.answer}/>)}
     </div>
   );
 };

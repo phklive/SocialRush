@@ -8,9 +8,9 @@ import { useFormik } from "formik";
 import { newToast } from "../utils/toast";
 
 const REGISTER_QUERY = gql`
-  mutation Mutation($name: String!, $email: String!, $password: String!) {
-    register(name: $name, email: $email, password: $password) 
-  }
+mutation Mutation($name: String!, $email: String!, $password: String!) {
+  register(name: $name, email: $email, password: $password)
+}
 `;
 
 const Register: React.FC = () => {
@@ -49,7 +49,6 @@ const Register: React.FC = () => {
       password: Yup.string().required("Password is required."),
     }),
     onSubmit: (values) => {
-      console.log(values)
       registrationHandler(values.name, values.email, values.password);
     },
   });
