@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import mongoosePaginate from 'mongoose-paginate-v2'
 
 const Schema = mongoose.Schema;
 
@@ -17,6 +18,8 @@ const CardSchema = new Schema({
   answer: { type: Boolean, required: true },
   author: { type: String, required: true },
 });
+
+CardSchema.plugin(mongoosePaginate)
 
 export const User = mongoose.model("User", UserSchema);
 export const Card = mongoose.model("Card", CardSchema);

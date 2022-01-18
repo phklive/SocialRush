@@ -6,6 +6,8 @@ import { Link } from "react-router-dom";
 import * as Yup from "yup";
 import { useFormik } from "formik";
 import { newToast } from "../utils/toast";
+import { useDispatch } from "react-redux";
+import {login} from '../redux/authSlice'
 
 const LOGIN_MUTATION = gql`
   mutation Mutation($email: String!, $password: String!) {
@@ -15,14 +17,16 @@ const LOGIN_MUTATION = gql`
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
-  const [login] = useMutation(LOGIN_MUTATION);
+  const dispatch = useDispatch()
+  const [loginMutation] = useMutation(LOGIN_MUTATION);
 
   const loginHandler = async (email: string, password: string) => {
     try {
-      const res = await login({ variables: { email, password } });
+      const res = await loginMutation({ variables: { email, password } });
       newToast("success", "Successfully logged in!", 2000);
       localStorage.setItem("token", res.data.login);
       setTimeout(() => {
+      dispatch(login())
         navigate("/profile");
       }, 2000);
     } catch (e: any) {

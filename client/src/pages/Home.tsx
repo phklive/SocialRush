@@ -1,5 +1,5 @@
 import { gql, useLazyQuery } from "@apollo/client";
-import { useNavigate  } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import CardUI from "../design/CardUI";
 import { newToast } from "../utils/toast";
@@ -14,31 +14,6 @@ const CARD_QUERY = gql`
     }
   }
 `;
-
-
-/*
-- responsive 
-- pagination
-- Make toast appear on navigated page
-- Add authentication to the app
-- create my card section
-- create account info section / profile
-- create connection and account creation page forms
-- finish success and failure logic 
-- home card aesthetic and size 
-- add score that updates on right and wrong answer
-- add 3 lives and when they go to 0 game stops
-- add score to database on end of game
-- cookie login or logout ? account data gathering from database
-- Account profile image upload and modification
-- Account data modification 
-- Account data verification
-- Find a real good game idea
-- Add visual hint on what page you are on the website
-- Protect routes
-- validate data everywhere
-- host app
-*/
 
 const Home: React.FC = () => {
   const navigate = useNavigate()
@@ -57,23 +32,23 @@ const Home: React.FC = () => {
     //mettre le score quand le jeu commence
     //mettre un timer
     newToast("success", "Correct!", 2000);
-    fetch();
+    await fetch();
   };
 
   const failure = async () => {
     newToast("error", "Wrong!", 2000);
-    fetch();
+    await fetch();
   };
 
-  const playHandler = () => {
+  const playHandler = async () => {
     try {
       if (!localStorage.hasOwnProperty('token')) throw new Error("You must be logged in to play.")
-      fetch()
-    } catch (e:any) {
-      newToast('error',e.message, 2000)
-        setTimeout(() => {
-          navigate('/login')
-        }, 2000);
+      await fetch()
+    } catch (e: any) {
+      newToast('error', e.message, 2000)
+      setTimeout(() => {
+        navigate('/login')
+      }, 2000);
     }
   }
 
@@ -97,8 +72,6 @@ const Home: React.FC = () => {
           onClick={() => { playHandler() }}
         >
           <h1 className="cardTitle">PLAY</h1>
-          <h1 className="cardTitle">{}</h1>
-          <h1 className="cardTitle">{}</h1>
         </button>
       </>
     );
@@ -106,8 +79,12 @@ const Home: React.FC = () => {
 
   return (
     <CardUI>
-      <h1 className="cardTitle">{data.randCard.title}</h1>
-      <p className="text-3xl self-center mt-16">{data.randCard.text}</p>
+      <div className="flex flex-row text-center">
+        <p className="text-xl self-center basis-1/6">Report card</p>
+        <h1 className="cardTitle basis-4/6">{data.randCard.title.charAt(0).toUpperCase() + data.randCard.title.slice(1)}</h1>
+        <p className="text-xl self-center basis-1/6">By {data.randCard.author}</p>
+      </div>
+      <p className="text-3xl self-center mt-16">{data.randCard.text.charAt(0).toUpperCase() + data.randCard.text.slice(1)}</p>
       <div className="flex mt-20 mb-2 gap-2 h-1/8">
         <button
           className="cardBtn  w-9/12 mr-2"

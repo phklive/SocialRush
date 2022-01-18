@@ -8,7 +8,7 @@ const typeDefs = gql`
     cards: [Card!]!
     randCard: Card!
     leaderBoard: [User!]!
-    myCards: [Card!]!
+    myCards(offset:Int!,limit:Int!): [Card!]!
   }
 
   type Mutation {

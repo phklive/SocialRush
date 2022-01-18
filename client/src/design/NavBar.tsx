@@ -1,9 +1,10 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
-import { isAuth } from '../utils/auth'
+import {useSelector} from 'react-redux'
 
 const NavBar: React.FC = () => {
 
+  const isAuth = useSelector((state:any) => state.auth.isAuth)
 
   return (
     <>
@@ -14,7 +15,7 @@ const NavBar: React.FC = () => {
           </h1>
         </NavLink>
         <div className="flex items-center justify-end ml-auto">
-          {isAuth() && (
+          {isAuth && (
             <>
               <NavLink to="/" className="navBtn">
                 Play
@@ -38,7 +39,7 @@ const NavBar: React.FC = () => {
           )}
 
 
-          {!isAuth() && (
+          {!isAuth && (
             <>
               <NavLink to="/leaderboard" className="navBtn">
                 Leaderboard

@@ -1,27 +1,27 @@
 import { User, Card } from "../database/schemas.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
-import {v4 as uuidv4} from 'uuid'
+import { v4 as uuidv4 } from 'uuid'
 
 const resolvers = {
   Query: {
-    user: async (_, args, {req}) => {
+    user: async (_, args, { req }) => {
       if (!req.user) {
         throw new Error("You are not authenticated!")
       }
-      return await User.findOne({name: req.user.name})
+      return await User.findOne({ name: req.user.name })
     },
 
     users: async () => {
       return await User.find({});
     },
 
-    card: async (_, {title}) => {
-      const card = await Card.findOne({title})
+    card: async (_, { title }) => {
+      const card = await Card.findOne({ title })
       if (!card) {
         throw new Error("Card not found.")
       }
-      return card 
+      return card
     },
 
     cards: async () => {
@@ -37,7 +37,7 @@ const resolvers = {
       return await User.find({}).sort({ score: -1 }).limit(10);
     },
 
-    myCards: async (_, args, { req }) => {
+    myCards: async (_, { offset, limit }, { req }) => {
       if (!req.user) {
         throw new Error("You are not logged in!")
       }
@@ -119,16 +119,16 @@ const resolvers = {
         answer,
         author: req.user.name,
       });
-        return await newCard.save();
-      
+      return await newCard.save();
+
     },
 
-    modifyCard: async (_,{id,title,text,answer}) => {
-      return Card.findOneAndUpdate({ id }, {title, text, answer}, {new: true})
+    modifyCard: async (_, { id, title, text, answer }) => {
+      return Card.findOneAndUpdate({ id }, { title, text, answer }, { new: true })
     },
 
-    deleteCard: async (_,{id}) => {
-      return Card.findOneAndDelete({id})
+    deleteCard: async (_, { id }) => {
+      return Card.findOneAndDelete({ id })
     },
 
     addScore: async (_, { name }) => {

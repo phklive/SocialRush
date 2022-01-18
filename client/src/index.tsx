@@ -7,6 +7,8 @@ import Profile from "./pages/Profile";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import LeaderBoard from "./pages/LeaderBoard";
+import { Provider } from 'react-redux'
+import store from './redux/store'
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ProtectedRoute } from './utils/auth'
 import {
@@ -19,7 +21,6 @@ import { setContext } from "@apollo/client/link/context";
 import "./styles/index.css";
 import NotFound from "./pages/NotFound";
 import ModifyCard from "./pages/ModifyCard";
-import Popup from "./design/Popup";
 
 const httpLink = createHttpLink({
   uri: "http://localhost:4000/graphql",
@@ -43,24 +44,25 @@ const client = new ApolloClient({
 
 ReactDOM.render(
   <BrowserRouter>
-    <ApolloProvider client={client}>
-      <React.StrictMode>
-        <NavBar />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/leaderboard" element={<LeaderBoard />} />
-          <Route element={<ProtectedRoute/>}>
-            <Route path="/createcard" element={<CreateCard />} />
-            <Route path="/modifycard" element={<ModifyCard />} />
-            <Route path="/profile" element={<Profile />} />
-          </Route>
-          <Route path="/popup" element={<Popup cardText="Are you sure you want to delete this card?" btnText="Delete"/>} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </React.StrictMode>
-    </ApolloProvider>
+    <Provider store={store}>
+      <ApolloProvider client={client}>
+        <React.StrictMode>
+          <NavBar />
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/leaderboard" element={<LeaderBoard />} />
+            <Route element={<ProtectedRoute />}>
+              <Route path="/createcard" element={<CreateCard />} />
+              <Route path="/modifycard" element={<ModifyCard />} />
+              <Route path="/profile" element={<Profile />} />
+            </Route>
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </React.StrictMode>
+      </ApolloProvider>
+    </Provider>
   </BrowserRouter>,
   document.getElementById("root")
 );
