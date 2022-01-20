@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 // Connect to database
 
 const connectToDB = () => {
-  mongoose.connect(process.env.DB || 'mongodb://127.0.0.1:27017/trueorfalse', {
+  mongoose.connect(process.env.DB || 'mongodb+srv://phk:ZJqeilOJN88IjrQ1@trueorfalsedatabase.zjlxx.mongodb.net/trueorfalse?retryWrites=true&w=majority', {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   });
