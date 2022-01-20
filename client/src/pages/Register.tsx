@@ -1,5 +1,4 @@
 import React from "react";
-import CardUI from "../design/CardUI";
 import { gql, useMutation } from "@apollo/client";
 import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
@@ -8,6 +7,7 @@ import { useFormik } from "formik";
 import { newToast } from "../utils/toast";
 import { useDispatch } from "react-redux";
 import { login } from "../redux/authSlice";
+import { ToastContainer } from "react-toastify";
 
 const REGISTER_QUERY = gql`
 mutation Mutation($name: String!, $email: String!, $password: String!) {
@@ -58,63 +58,85 @@ const Register: React.FC = () => {
   });
 
   return (
-    <CardUI>
-      <h1 className="cardTitle">Register</h1>
-      <form className="flex flex-col m-2" onSubmit={formik.handleSubmit}>
-        <label htmlFor="name" className="formLabel">
-          Name:
-        </label>
-        <input
-          type="text"
-          name="name"
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          value={formik.values.name}
-          className="formInput"
-        />
-        {formik.errors.name && formik.touched.name ? (
-          <p className="formError">{formik.errors.name}</p>
-        ) : null}
+    <>
+      <ToastContainer
+        style={{ width: "500px" }}
+        position="top-center"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover />
 
-        <label htmlFor="email" className="formLabel">
-          Email:
-        </label>
-        <input
-          type="email"
-          name="email"
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          value={formik.values.email}
-          className="formInput"
-        />
-        {formik.errors.email && formik.touched.email ? (
-          <p className="formError">{formik.errors.email}</p>
-        ) : null}
-        <label htmlFor="password" className="formLabel">
-          Password:
-        </label>
-        <input
-          type="password"
-          name="password"
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          value={formik.values.password}
-          className="formInput"
-        />
-        {formik.errors.password && formik.touched.password ? (
-          <p className="formError">{formik.errors.password}</p>
-        ) : null}
-        <Link
-          className="mt-2 self-center hover:text-blue-800 text-2xl"
-          to="/login"
-        >
-          Already have an account?
-        </Link>
-        <button type="submit" className="cardBtn">
-          Register
-        </button>
-      </form>
-    </CardUI>
+      <div className="accountCard">
+        <div className="innerAccountCard">
+          <h1 className="accountCardTitle">Welcome player</h1>
+          <p className="accountCardSubTitle">Welcome to True or False!</p>
+          <form className="flex flex-col" onSubmit={formik.handleSubmit}>
+            <label htmlFor="name" className="formLabel">
+              Name
+            </label>
+            <input
+              type="text"
+              name="name"
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.name}
+              placeholder="Enter your name"
+              className="formInput"
+            />
+            {formik.errors.name && formik.touched.name ? (
+              <p className="formError">{formik.errors.name}</p>
+            ) : null}
+
+            <label htmlFor="email" className="formLabel">
+              Email
+            </label>
+            <input
+              type="email"
+              name="email"
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.email}
+              placeholder="Enter your email"
+              className="formInput"
+            />
+            {formik.errors.email && formik.touched.email ? (
+              <p className="formError">{formik.errors.email}</p>
+            ) : null}
+            <label htmlFor="password" className="formLabel">
+              Password
+            </label>
+            <input
+              type="password"
+              name="password"
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.password}
+              placeholder="&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;"
+              className="formInput"
+            />
+            {formik.errors.password && formik.touched.password ? (
+              <p className="formError">{formik.errors.password}</p>
+            ) : null}
+            <div
+              className="my-4"
+            >
+              <span className="text-xl text-slate-400">
+                Already have an account?
+              </span>
+              <Link to="/login" className="hover:text-blue-800 text-xl"> Sign in.</Link>
+            </div>
+            <button type="submit" className="accountBtn">
+              Sign up
+            </button>
+          </form>
+        </div>
+      </div>
+    </>
   );
 };
 

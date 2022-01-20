@@ -1,5 +1,4 @@
 import React from "react";
-import CardUI from "../design/CardUI";
 import { gql, useMutation } from "@apollo/client";
 import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
@@ -7,7 +6,8 @@ import * as Yup from "yup";
 import { useFormik } from "formik";
 import { newToast } from "../utils/toast";
 import { useDispatch } from "react-redux";
-import {login} from '../redux/authSlice'
+import { login } from '../redux/authSlice'
+import { ToastContainer } from "react-toastify";
 
 const LOGIN_MUTATION = gql`
   mutation Mutation($email: String!, $password: String!) {
@@ -26,7 +26,7 @@ const Login: React.FC = () => {
       newToast("success", "Successfully logged in!", 2000);
       localStorage.setItem("token", res.data.login);
       setTimeout(() => {
-      dispatch(login())
+        dispatch(login())
         navigate("/profile");
       }, 2000);
     } catch (e: any) {
@@ -49,48 +49,63 @@ const Login: React.FC = () => {
   });
 
   return (
-    <CardUI>
-      <h1 className="cardTitle">Login</h1>
-      <form className="flex flex-col m-2" onSubmit={formik.handleSubmit}>
-        <label htmlFor="email" className="formLabel">
-          Email:
-        </label>
-        <input
-          type="email"
-          name="email"
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          value={formik.values.email}
-          className="formInput"
-        />
-        {formik.errors.email && formik.touched.email ? (
-          <p className="formError">{formik.errors.email}</p>
-        ) : null}
-        <label htmlFor="password" className="formLabel">
-          Password:
-        </label>
-        <input
-          type="password"
-          name="password"
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          value={formik.values.password}
-          className="formInput"
-        />
-        {formik.errors.password && formik.touched.password ? (
-          <p className="formError">{formik.errors.password}</p>
-        ) : null}
-        <Link
-          className="mt-2 self-center hover:text-blue-800 text-2xl"
-          to="/register"
-        >
-          Need to create an account?
-        </Link>
-        <button type="submit" className="cardBtn">
-          Login
-        </button>
-      </form>
-    </CardUI>
+    <>
+      <ToastContainer
+      style={{width:"500px"}}
+      position="top-center"
+      autoClose={5000}
+      hideProgressBar={false}
+      newestOnTop={false}
+      closeOnClick
+      rtl={false}
+      pauseOnFocusLoss
+      draggable
+      pauseOnHover />
+      <div className="accountCard">
+        <div className="innerAccountCard">
+          <h1 className="accountCardTitle">Welcome back</h1>
+          <p className="accountCardSubTitle">Welcome back! Please enter your details.</p>
+          <form className="flex flex-col" onSubmit={formik.handleSubmit}>
+            <label htmlFor="email" className="formLabel">
+              Email
+            </label>
+            <input
+              type="email"
+              name="email"
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.email}
+              placeholder="Enter your email"
+              className="formInput" />
+            {formik.errors.email && formik.touched.email ? (
+              <p className="formError">{formik.errors.email}</p>
+            ) : null}
+            <label htmlFor="password" className="formLabel">
+              Password
+            </label>
+            <input
+              type="password"
+              name="password"
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.password}
+              placeholder="&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;"
+              className="formInput" />
+            {formik.errors.password && formik.touched.password ? (
+              <p className="formError">{formik.errors.password}</p>
+            ) : null}
+            <div className="my-4">
+              <span className="text-xl text-slate-400">
+                Don't have an account?
+              </span>
+              <Link className="hover:text-blue-800 text-xl" to="/register"> Sign up!</Link>
+            </div>
+            <button type="submit" className="accountBtn">
+              Sign in
+            </button>
+          </form>
+        </div>
+      </div></>
   );
 };
 

@@ -5,6 +5,7 @@ import { v4 as uuidv4 } from 'uuid'
 
 const resolvers = {
   Query: {
+
     user: async (_, args, { req }) => {
       if (!req.user) {
         throw new Error("You are not authenticated!")
@@ -37,11 +38,16 @@ const resolvers = {
       return await User.find({}).sort({ score: -1 }).limit(10);
     },
 
-    myCards: async (_, { offset, limit }, { req }) => {
+    myCards: async (_, args, { req }) => {
       if (!req.user) {
         throw new Error("You are not logged in!")
       }
-      return await Card.find({ author: req.user.name })
+      const count = await Card.find({ author: req.user.name }).count()
+      const cards = await Card.find({ author: req.user.name }).sort({_id:-1})
+      return {
+        cards,
+        count
+      }
     },
   },
 
@@ -114,6 +120,7 @@ const resolvers = {
       }
       const newCard = new Card({
         id: uuidv4(),
+        report: 0,
         title,
         text,
         answer,
@@ -139,6 +146,11 @@ const resolvers = {
       );
       return user;
     },
+
+    addReport: async (_, {id}) => {
+      const card = await Card.findOneAndUpdate({id},{$inc: {report: 1}}, {new: true})
+      return card
+    }
   },
 };
 

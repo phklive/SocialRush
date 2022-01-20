@@ -8,13 +8,14 @@ const typeDefs = gql`
     cards: [Card!]!
     randCard: Card!
     leaderBoard: [User!]!
-    myCards(offset:Int!,limit:Int!): [Card!]!
+    myCards: CardsPagination!
   }
 
   type Mutation {
     register(name: String!, email: String!, password: String!): String!
     login(email: String!, password: String!): String!
     addScore(name: String!): User!
+    addReport(id: ID!): Card!
     newCard(
       title: String!
       text: String!
@@ -35,10 +36,16 @@ const typeDefs = gql`
 
   type Card {
     id: ID!
+    report: Int!
     title: String!
     text: String!
     answer: Boolean!
     author: String!
+  }
+
+  type CardsPagination {
+    cards: [Card!]!
+    count: Int!
   }
 `;
 

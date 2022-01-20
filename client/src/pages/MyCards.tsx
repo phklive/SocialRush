@@ -1,40 +1,62 @@
-import { useQuery, gql } from "@apollo/client";
-import React from "react";
-import Card from "../design/Card";
-import "../styles/index.css";
+import { useQuery, gql } from '@apollo/client'
+import React, { useState } from 'react'
+import Card from '../design/Card'
+import '../styles/index.css'
 
 export const MYCARDS_QUERY = gql`
-query User($offset: Int!, $limit: Int!) {
-  myCards(offset: $offset, limit: $limit) {
-    id
-    title
-    text
-    answer
-    author
+query Query {
+  myCards {
+    cards {
+      id
+      title
+      text
+      answer
+    }
+    count
   }
 }
-`;
+`
 
 const MyCards: React.FC = () => {
-  const { loading, error, data, fetchMore } = useQuery(MYCARDS_QUERY, {
-    variables: {
-      offset: 0,
-      limit: 3
-    },
-    fetchPolicy: 'no-cache',
-  });
+  const { loading, error, data  } = useQuery(MYCARDS_QUERY, {fetchPolicy: 'no-cache'})
 
-  if (loading) return <p>loading...</p>;
-  if (error) return <p>{error.message}</p>;
+  const [start, setStart] = useState(0)
+  const [end, setEnd] = useState(3)
 
-  return (
-    <>
-      <div className="pink p-2">
-        {data.myCards.map((card: any) => <Card key={card.id} id={card.id} title={card.title} text={card.text} answer={card.answer} />)}
-      </div>
-    <button className="cardBtn" onClick={() => {}}>Next Cards</button>
-    </>
-  );
-};
+  const handlePrevious = () => {
+    setStart((oldState) => oldState - 3)
+    setEnd((oldState) => oldState - 3)
+  }
+
+  const handleNext = () => {
+    setStart((oldState) => oldState + 3)
+    setEnd((oldState) => oldState + 3)
+  }
+
+	if (loading) return <p>loading...</p>
+	if (error) return <p>{error.message}</p>
+
+	return (
+		<div className="mt-10 flex flex-col">
+      {data.myCards.cards.slice(start,end).map((card: any) => (
+				<Card
+					key={card.id}
+					id={card.id}
+					title={card.title}
+					text={card.text}
+					answer={card.answer}
+				/>
+			))}
+			<div className="flex flex-row gap-4">
+        <button disabled={start === 0} className="accountBtn flex-1" onClick={handlePrevious}>
+					Previous
+				</button>
+        <button disabled={end >= data.myCards.cards.length} className="accountBtn flex-1" onClick={handleNext}>
+					Next
+				</button>
+			</div>
+		</div>
+	)
+}
 
 export default MyCards

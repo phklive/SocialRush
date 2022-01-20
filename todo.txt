@@ -1,11 +1,6 @@
-- Add card report if not following site guidelines -> add guidelines, add verification system
-- Add text to explain website concept and what people should do or not
-- Finish popup -> backdrop blur, activation, ect...
+- finish landing page -> Add text to explain website concept and what people should do or not
 - Find concept for the app
-- Pagination on myCards and on leaderBoard
-- Card size and aesthetic
 - Manipulate score -> database
-- Update navbar on disconnect or connect -> refetch, re-render, update
 - Account profile image upload and modification -> hosting: cloudinary 
 - Make the website responsive and playable on phones
 - Host app on Heroku

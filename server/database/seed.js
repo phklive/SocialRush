@@ -39,6 +39,7 @@ const testUsers = [
 const testCards = [
   {
     id: uuidv4(),
+    report: 0,
     title: 'testCard 2',
     text: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with dLorem Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with dLorem Iptsrr',
     answer: true,
@@ -46,6 +47,7 @@ const testCards = [
   },
   {
     id: uuidv4(),
+    report: 0,
     title: 'testCard 3',
     text: 'this is the text for the testcard 3',
     answer: true,
@@ -53,6 +55,7 @@ const testCards = [
   },
   {
     id: uuidv4(),
+    report: 0,
     title: 'testCard 4',
     text: 'this is the text for the testcard 4',
     answer: true,

@@ -1,5 +1,4 @@
 import React from "react";
-import CardUI from "../design/CardUI";
 import LeaderUser from "../design/LeaderUser";
 import { gql, useQuery } from "@apollo/client";
 import "../styles/index.css";
@@ -10,20 +9,22 @@ const LEADER_QUERY = gql`
       name
       score
     }
+users {
+    id
+  }
   }
 `;
 
 const LeaderBoard: React.FC = () => {
-  const { loading, error, data } = useQuery(LEADER_QUERY, {fetchPolicy: 'no-cache'});
-
+  const { data } = useQuery(LEADER_QUERY, {fetchPolicy: 'no-cache'});
   return (
-    <CardUI>
-      {loading && <p>loading...</p>}
-      {error && <p>error...</p>}
+    <div>
       {data && (
-        <>
-          <h1 className="cardTitle">Leaderboard</h1>
-          <div>
+        <div className="accountCard">
+          <div className="innerAccountCard">
+          <h1 className="accountCardTitle">Leaderboard</h1>
+          <h1 className="text-center text-2xl mb-2">Total users: {data.users.length}</h1>
+          <p className="accountCardSubTitle">Become the best player in the game!</p>
             {data.leaderBoard.map((user: any, i: number) => {
               return (
                 <LeaderUser
@@ -35,9 +36,9 @@ const LeaderBoard: React.FC = () => {
               );
             })}
           </div>
-        </>
+        </div>
       )}
-    </CardUI>
+    </div>
   );
 };
 
