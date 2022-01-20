@@ -36,6 +36,10 @@ async function startApolloServer(typeDefs, resolvers) {
 
   server.applyMiddleware({ app, path: '/' });
 
+  if (process.env.NODE_ENV === 'production') {
+    app.use(express.static('../client/build/'))
+  }
+
   await new Promise((resolve) => httpServer.listen({ port }, resolve));
   console.log(
     `🚀 Server ready at http://localhost:${port}${server.graphqlPath}`
