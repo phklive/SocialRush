@@ -16,3 +16,4 @@ ideas:
 - Make people earn points when they create good questions -> tricky, complex
 - On answer pourcentages of answer are shown on card and shows what 
 other people thought and answered 
+test
