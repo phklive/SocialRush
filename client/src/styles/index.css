@@ -34,7 +34,7 @@
 }
 
 .playCard {
-  @apply flex flex-col h-1/2 w-2/3 bg-white rounded-lg drop-shadow-2xl  border-8 pinkBorder m-auto p-20 mt-64
+  @apply flex flex-col h-1/2 w-2/3 bg-white rounded-lg drop-shadow-2xl  border-8 pinkBorder m-auto p-10 mt-40
 }
 
 .accountCard {
@@ -63,11 +63,11 @@
 }
 
 .cardTitle {
-  @apply text-4xl self-center m-2 underline;
+  @apply self-center m-2 text-4xl underline;
 }
 
 .cardBtn {
-  @apply border-2 border-black hover:bg-pink-300 rounded-lg text-3xl mt-4 p-2;
+  @apply p-2 mt-4 text-3xl border-2 border-black rounded-lg hover:bg-pink-300;
 }
 
 .cardText {
@@ -83,7 +83,7 @@
 }
 
 .formError {
-  @apply text-lg text-red-500 mt-1;
+  @apply mt-1 text-lg text-red-500;
 }
 
 .toast {

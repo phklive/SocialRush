@@ -1,30 +1,29 @@
-import { gql } from "apollo-server-express";
+import {gql} from "apollo-server-express";
 
 const typeDefs = gql`
   type Query {
-    user: User
-    users: [User!]!
-    card(title: String!): Card
-    cards: [Card!]!
-    randCard: Card!
-    leaderBoard: [User!]!
-    myCards: [Card!]!
+    getUser: User
+    getUsers: [User!]!
+    getCard(title: String!): Card
+    getCards: [Card!]!
+    getRandomCard: Card!
+    getLeaderBoard: [User!]!
+    getUserCards: [Card!]!
   }
 
   type Mutation {
-    register(name: String!, email: String!, password: String!): String!
-    login(email: String!, password: String!): String!
-    addScore(name: String!): User!
-    addReport(id: ID!): Card!
-    newCard(
+    registerUser(name: String!, email: String!, password: String!): String!
+    loginUser(email: String!, password: String!): String!
+    addUserScore: User!
+    addCardReport(id: ID!): Card!
+    createCard(
       title: String!
       text: String!
       answer: Boolean!
     ): Card!
     modifyCard(id:ID!, title:String!, text:String!, answer:Boolean!):Card!
     deleteCard(id:ID!):Card!
-    addTrueAnswer(id:ID!): Card! 
-    addFalseAnswer(id:ID!): Card! 
+    addCardAnswer(id:ID!,bool:Boolean!): Card! 
   }
 
   type User {

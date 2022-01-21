@@ -1,18 +1,18 @@
 import React from "react";
-import { gql, useMutation } from "@apollo/client";
-import { useNavigate } from "react-router";
-import { Link } from "react-router-dom";
+import {gql, useMutation} from "@apollo/client";
+import {useNavigate} from "react-router";
+import {Link} from "react-router-dom";
 import * as Yup from "yup";
-import { useFormik } from "formik";
-import { newToast } from "../utils/toast";
-import { useDispatch } from "react-redux";
-import { login } from '../redux/authSlice'
-import { ToastContainer } from "react-toastify";
+import {useFormik} from "formik";
+import {newToast} from "../utils/toast";
+import {useDispatch} from "react-redux";
+import {login} from '../redux/authSlice'
+import {ToastContainer} from "react-toastify";
 
 const LOGIN_MUTATION = gql`
-  mutation Mutation($email: String!, $password: String!) {
-    login(email: $email, password: $password)
-  }
+mutation LoginUser($email: String!, $password: String!) {
+  loginUser(email: $email, password: $password)
+}
 `;
 
 const Login: React.FC = () => {
@@ -22,9 +22,9 @@ const Login: React.FC = () => {
 
   const loginHandler = async (email: string, password: string) => {
     try {
-      const res = await loginMutation({ variables: { email, password } });
+      const res = await loginMutation({variables: {email, password}});
       newToast("success", "Successfully logged in!", 2000);
-      localStorage.setItem("token", res.data.login);
+      localStorage.setItem("token", res.data.loginUser);
       setTimeout(() => {
         dispatch(login())
         navigate("/profile");
@@ -51,16 +51,16 @@ const Login: React.FC = () => {
   return (
     <>
       <ToastContainer
-      style={{width:"500px"}}
-      position="top-center"
-      autoClose={5000}
-      hideProgressBar={false}
-      newestOnTop={false}
-      closeOnClick
-      rtl={false}
-      pauseOnFocusLoss
-      draggable
-      pauseOnHover />
+        style={{width: "500px"}}
+        position="top-center"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover />
       <div className="accountCard">
         <div className="innerAccountCard">
           <h1 className="accountCardTitle">Welcome back</h1>
@@ -98,7 +98,7 @@ const Login: React.FC = () => {
               <span className="text-xl text-slate-400">
                 Don't have an account?
               </span>
-              <Link className="hover:text-blue-800 text-xl" to="/register"> Sign up!</Link>
+              <Link className="text-xl hover:text-blue-800" to="/register"> Sign up!</Link>
             </div>
             <button type="submit" className="accountBtn">
               Sign in

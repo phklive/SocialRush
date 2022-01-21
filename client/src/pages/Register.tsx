@@ -1,17 +1,17 @@
 import React from "react";
-import { gql, useMutation } from "@apollo/client";
-import { useNavigate } from "react-router";
-import { Link } from "react-router-dom";
+import {gql, useMutation} from "@apollo/client";
+import {useNavigate} from "react-router";
+import {Link} from "react-router-dom";
 import * as Yup from "yup";
-import { useFormik } from "formik";
-import { newToast } from "../utils/toast";
-import { useDispatch } from "react-redux";
-import { login } from "../redux/authSlice";
-import { ToastContainer } from "react-toastify";
+import {useFormik} from "formik";
+import {newToast} from "../utils/toast";
+import {useDispatch} from "react-redux";
+import {login} from "../redux/authSlice";
+import {ToastContainer} from "react-toastify";
 
 const REGISTER_QUERY = gql`
 mutation Mutation($name: String!, $email: String!, $password: String!) {
-  register(name: $name, email: $email, password: $password)
+  registerUser(name: $name, email: $email, password: $password)
 }
 `;
 
@@ -26,7 +26,7 @@ const Register: React.FC = () => {
     password: string
   ) => {
     try {
-      const res = await register({ variables: { name, email, password } });
+      const res = await register({variables: {name, email, password}});
       newToast("success", "Account successfully created!", 2000);
       localStorage.setItem("token", res.data.register);
       setTimeout(() => {
@@ -60,7 +60,7 @@ const Register: React.FC = () => {
   return (
     <>
       <ToastContainer
-        style={{ width: "500px" }}
+        style={{width: "500px"}}
         position="top-center"
         autoClose={5000}
         hideProgressBar={false}
@@ -128,7 +128,7 @@ const Register: React.FC = () => {
               <span className="text-xl text-slate-400">
                 Already have an account?
               </span>
-              <Link to="/login" className="hover:text-blue-800 text-xl"> Sign in.</Link>
+              <Link to="/login" className="text-xl hover:text-blue-800"> Sign in.</Link>
             </div>
             <button type="submit" className="accountBtn">
               Sign up

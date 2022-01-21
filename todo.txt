@@ -1,20 +1,21 @@
-- finish landing page -> Add text to explain website concept and what people should do or not
-- Find concept for the app
-- fix jwt refresh token bug after 1 hour
-- Manipulate score -> database
 - Account profile image upload and modification -> hosting: cloudinary 
+- fix error of ? of true and false cardData
+- Check and fix all toasts and toastContainer sizes
+- Re-work langing page 
+- Update player Score and show it on screen when game starts
+- fix jwt refresh token bug after 1 hour
 - Make the website responsive and playable on phones
-- Host app on Heroku
+- Final touches icons ect...
+- Deploy app
 
 optional:
 - Change token from localstorage or securise localstorage
 - Protect graphql routes / resolvers
-- Full app redesign 
 - Make toast appear on navigated page
-- fix toast on play click page -> must be authenticated
 
 ideas:
 - Make people earn points when they answer right
 - Make people earn points when they create good questions -> tricky, complex
 - On answer pourcentages of answer are shown on card and shows what 
 other people thought and answered 
+

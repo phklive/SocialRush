@@ -1,15 +1,15 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { Provider } from 'react-redux'
+import {Provider} from 'react-redux'
 import store from './redux/store'
-import { BrowserRouter} from "react-router-dom";
+import {BrowserRouter} from "react-router-dom";
 import {
   ApolloClient,
   InMemoryCache,
   createHttpLink,
   ApolloProvider,
 } from "@apollo/client";
-import { setContext } from "@apollo/client/link/context";
+import {setContext} from "@apollo/client/link/context";
 import "./styles/index.css";
 import App from "./pages/App";
 
@@ -17,7 +17,7 @@ const httpLink = createHttpLink({
   uri: "http://localhost:4000/graphql",
 });
 
-const authLink = setContext((_, { headers }) => {
+const authLink = setContext((_, {headers}) => {
   const token = localStorage.getItem("token");
 
   return {
@@ -28,9 +28,17 @@ const authLink = setContext((_, { headers }) => {
   };
 });
 
+const cache = new InMemoryCache({
+  typePolicies: {
+    getUser: {
+      keyFields: ["id"]
+    },
+  },
+});
+
 const client = new ApolloClient({
   link: authLink.concat(httpLink),
-  cache: new InMemoryCache(),
+  cache
 });
 
 ReactDOM.render(
@@ -38,7 +46,7 @@ ReactDOM.render(
     <Provider store={store}>
       <ApolloProvider client={client}>
         <React.StrictMode>
-          <App/>
+          <App />
         </React.StrictMode>
       </ApolloProvider>
     </Provider>
