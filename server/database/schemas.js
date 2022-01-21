@@ -17,6 +17,8 @@ const CardSchema = new Schema({
   text: { type: String, required: true },
   answer: { type: Boolean, required: true },
   author: { type: String, required: true },
+  true: { type: Number, required: true },
+  false: { type: Number, required: true },
 });
 
 export const User = mongoose.model("User", UserSchema);

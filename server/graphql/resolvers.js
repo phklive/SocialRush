@@ -42,12 +42,8 @@ const resolvers = {
       if (!req.user) {
         throw new Error("You are not logged in!")
       }
-      const count = await Card.find({ author: req.user.name }).count()
-      const cards = await Card.find({ author: req.user.name }).sort({_id:-1})
-      return {
-        cards,
-        count
-      }
+      
+      return await Card.find({ author: req.user.name }).sort({_id:-1})
     },
   },
 
@@ -125,6 +121,8 @@ const resolvers = {
         text,
         answer,
         author: req.user.name,
+        true: 0,
+        false: 0,
       });
       return await newCard.save();
 
@@ -150,7 +148,16 @@ const resolvers = {
     addReport: async (_, {id}) => {
       const card = await Card.findOneAndUpdate({id},{$inc: {report: 1}}, {new: true})
       return card
-    }
+    },
+
+    addTrueAnswer: async (_, {id}) => {
+      return await Card.findOneAndUpdate({id},{$inc: {true:1}}, {new: true})
+    },
+
+    addFalseAnswer: async (_, {id}) => {
+      return await Card.findOneAndUpdate({id},{$inc: {false:1}}, {new: true})
+    },
+
   },
 };
 

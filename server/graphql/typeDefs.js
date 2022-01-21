@@ -8,7 +8,7 @@ const typeDefs = gql`
     cards: [Card!]!
     randCard: Card!
     leaderBoard: [User!]!
-    myCards: CardsPagination!
+    myCards: [Card!]!
   }
 
   type Mutation {
@@ -23,6 +23,8 @@ const typeDefs = gql`
     ): Card!
     modifyCard(id:ID!, title:String!, text:String!, answer:Boolean!):Card!
     deleteCard(id:ID!):Card!
+    addTrueAnswer(id:ID!): Card! 
+    addFalseAnswer(id:ID!): Card! 
   }
 
   type User {
@@ -41,11 +43,8 @@ const typeDefs = gql`
     text: String!
     answer: Boolean!
     author: String!
-  }
-
-  type CardsPagination {
-    cards: [Card!]!
-    count: Int!
+    true: Int!
+    false: Int!
   }
 `;
 

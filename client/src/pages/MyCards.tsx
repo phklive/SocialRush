@@ -4,15 +4,12 @@ import Card from '../design/Card'
 import '../styles/index.css'
 
 export const MYCARDS_QUERY = gql`
-query Query {
+query MyCards {
   myCards {
-    cards {
-      id
-      title
-      text
-      answer
-    }
-    count
+    id
+    title
+    text
+    answer
   }
 }
 `
@@ -38,7 +35,7 @@ const MyCards: React.FC = () => {
 
 	return (
 		<div className="mt-10 flex flex-col">
-      {data.myCards.cards.slice(start,end).map((card: any) => (
+      {data.myCards.slice(start,end).map((card: any) => (
 				<Card
 					key={card.id}
 					id={card.id}
@@ -51,7 +48,7 @@ const MyCards: React.FC = () => {
         <button disabled={start === 0} className="accountBtn flex-1" onClick={handlePrevious}>
 					Previous
 				</button>
-        <button disabled={end >= data.myCards.cards.length} className="accountBtn flex-1" onClick={handleNext}>
+        <button disabled={end >= data.myCards.length} className="accountBtn flex-1" onClick={handleNext}>
 					Next
 				</button>
 			</div>

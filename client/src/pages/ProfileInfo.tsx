@@ -9,11 +9,9 @@ query User {
     score
   }
   myCards {
-    cards {
       title
     }
   }
-}
 `
 
 const Profile: React.FC = () => {
@@ -33,7 +31,7 @@ const Profile: React.FC = () => {
       </div>
       <div className="flex flex-row text-center">
         <p className="text-3xl flex-1">{data.user.score}pts</p>
-        <p className="text-3xl flex-1">{data.myCards.cards.length}</p>
+        <p className="text-3xl flex-1">{data.myCards.length}</p>
         <p className="text-3xl flex-1">1st</p>
       </div>
     </div>
