@@ -1,10 +1,10 @@
-import {gql} from "apollo-server-express";
+import {buildSchema} from "graphql";
 
-const typeDefs = gql`
+const typeDefs = buildSchema(`
   type Query {
+    isAuth: Boolean!
     getUser: User
     getUsers: [User!]!
-    getCard(title: String!): Card
     getCards: [Card!]!
     getRandomCard: Card!
     getLeaderBoard: [User!]!
@@ -12,8 +12,9 @@ const typeDefs = gql`
   }
 
   type Mutation {
-    registerUser(name: String!, email: String!, password: String!): String!
-    loginUser(email: String!, password: String!): String!
+    registerUser(name: String!, email: String!, password: String!): Boolean!
+    loginUser(email: String!, password: String!): Boolean!
+    logoutUser: Boolean!
     addUserScore: User!
     addCardReport(id: ID!): Card!
     createCard(
@@ -45,6 +46,6 @@ const typeDefs = gql`
     true: Int!
     false: Int!
   }
-`;
+`);
 
 export default typeDefs;

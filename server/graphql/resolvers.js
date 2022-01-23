@@ -5,24 +5,23 @@ import {v4 as uuidv4} from 'uuid'
 
 const resolvers = {
   Query: {
+    isAuth: async (_, args, {req}) => {
+
+      if (!req.session.user) {
+        return false
+      }
+
+      return true
+    },
 
     getUser: async (_, args, {req}) => {
-      if (!req.user) {
-        throw new Error("You are not authenticated!")
-      }
-      return await User.findOne({name: req.user.name})
+      if (!req.session.user) throw new Error('You are not authenticated!')
+
+      return await User.findOne({id: req.session.user.id})
     },
 
-    getUsers: async () => {
+    getUsers: async (_, args, {req}) => {
       return await User.find({});
-    },
-
-    getCard: async (_, {title}) => {
-      const card = await Card.findOne({title})
-      if (!card) {
-        throw new Error("Card not found.")
-      }
-      return card
     },
 
     getCards: async () => {
@@ -39,16 +38,14 @@ const resolvers = {
     },
 
     getUserCards: async (_, args, {req}) => {
-      if (!req.user) {
-        throw new Error("You are not logged in!")
-      }
+      if (!req.session.user) throw new Error('You are not authenticated!')
 
-      return await Card.find({author: req.user.name}).sort({_id: -1})
+      return await Card.find({author: req.session.user.name}).sort({_id: -1})
     },
   },
 
   Mutation: {
-    registerUser: async (_, {name, email, password}) => {
+    registerUser: async (_, {name, email, password}, {req}) => {
       const existingUser = await User.findOne({name});
 
       if (existingUser) {
@@ -69,22 +66,20 @@ const resolvers = {
         score: 0,
       });
 
-      const user = await newUser.save();
+      const user = await newUser.save()
 
-      return jwt.sign(
-        {
-          id: user._id,
-          email: user.email,
-          name: user.name
-        },
-        process.env.JWT_SECRET,
-        {
-          expiresIn: "1h",
-        }
-      );
+      const res = {
+        name: user.name,
+        email: user.email,
+        id: user.id,
+      }
+
+      req.session.user = res
+
+      return true
     },
 
-    loginUser: async (_, {email, password}) => {
+    loginUser: async (_, {email, password}, {req}) => {
       const user = await User.findOne({email});
 
       if (!user) {
@@ -97,30 +92,37 @@ const resolvers = {
         throw new Error("Credentials are incorrect...");
       }
 
-      return jwt.sign(
-        {
-          id: user._id,
-          email: user.email,
-          name: user.name
-        },
-        process.env.JWT_SECRET,
-        {
-          expiresIn: "1h",
-        }
-      );
+      const res = {
+        name: user.name,
+        email: user.email,
+        id: user.id,
+      }
+
+      req.session.user = res
+
+      return true
+    },
+
+    logoutUser: async (_, args, {req}) => {
+      if (!req.session.user) throw new Error('You are not authenticated!')
+
+      req.session.destroy()
+
+      return true
     },
 
     createCard: async (_, {title, text, answer}, {req}) => {
-      if (!req.user) {
-        throw new Error("You are not authenticated!")
+      if (!req.session.user) {
+        throw new Error('You are not authenticated!')
       }
+
       const newCard = new Card({
         id: uuidv4(),
         report: 0,
         title,
         text,
         answer,
-        author: req.user.name,
+        author: req.session.user.name,
         true: 0,
         false: 0,
       });
@@ -137,11 +139,12 @@ const resolvers = {
     },
 
     addUserScore: async (_, args, {req}) => {
-      if (!req.user) {
-        throw new Error("You are not authenticated!")
+      if (!req.session.user) {
+        throw new Error('You are not authenticated!')
       }
+
       const user = await User.findOneAndUpdate(
-        {name: req.user.name},
+        {name: req.session.user.name},
         {$inc: {score: 1}},
         {new: true}
       );

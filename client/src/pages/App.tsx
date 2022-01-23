@@ -11,28 +11,52 @@ import ModifyCard from "./ModifyCard";
 import Landing from "./Landing";
 import Play from "./Play";
 import ViewCard from "./ViewCard";
+import {AuthContext} from "./AuhthContext";
+import {useEffect, useState} from "react";
 
+const AUTH_QUERY = `
+query Query {
+  isAuth 
+}
+`
 
-const App: React.FC = () => {
+const App = () => {
+  const [session, setSession] = useState(false)
+
+  useEffect(() => {
+    fetch('http://localhost:4000/graphql', {
+      method: 'POST',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: JSON.stringify({query: AUTH_QUERY})
+    })
+      .then(r => r.json())
+      .then(data => setSession(data.data.isAuth));
+  }, [])
 
   return (
     <>
       <div id="portal" />
-      <NavBar />
-      <Routes>
-        <Route path="/" element={<Landing />} />
-        <Route path="/leaderboard" element={<LeaderBoard />} />
-        <Route element={<ProtectedRoute />}>
-          <Route path="/createcard" element={<CreateCard />} />
-          <Route path="/viewcard" element={<ViewCard />} />
-          <Route path="/modifycard" element={<ModifyCard />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/play" element={<Play />} />
-        </Route>
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
+      <AuthContext.Provider value={{session, setSession}}>
+        <NavBar />
+        <Routes>
+          <Route element={<ProtectedRoute />}>
+            <Route path="/createcard" element={<CreateCard />} />
+            <Route path="/viewcard" element={<ViewCard />} />
+            <Route path="/modifycard" element={<ModifyCard />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/play" element={<Play />} />
+            <Route path="/leaderboard" element={<LeaderBoard />} />
+          </Route>
+          <Route path="/" element={<Landing />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </AuthContext.Provider>
     </>
   )
 }

@@ -112,7 +112,7 @@ const CreateCard: React.FC = () => {
             <option value="true">True</option>
             <option value="false">False</option>
           </select>
-          <button type="submit" className="accountBtn">
+          <button type="submit" className="mt-5 accountBtn">
             Create card
           </button>
         </form>

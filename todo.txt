@@ -1,17 +1,14 @@
 - Account profile image upload and modification -> hosting: cloudinary 
-- fix error of ? of true and false cardData
 - Check and fix all toasts and toastContainer sizes
 - Re-work langing page 
-- Update player Score and show it on screen when game starts
-- fix jwt refresh token bug after 1 hour
 - Make the website responsive and playable on phones
+- Put the website in french
 - Final touches icons ect...
+- ranking on profile page
 - Deploy app
 
 optional:
-- Change token from localstorage or securise localstorage
 - Protect graphql routes / resolvers
-- Make toast appear on navigated page
 
 ideas:
 - Make people earn points when they answer right

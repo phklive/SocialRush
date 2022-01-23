@@ -55,19 +55,19 @@ const Card: React.FC<CardProps> = ({id, title, text, answer, T, F}) => {
         exec={deleteCardHandler}
       />
       <div>
-        <div className="flex p-2 m-2 border-4 border-black rounded-md">
+        <div className="flex p-2 m-2 border-4 pinkBorder rounded-md">
           <h1 className="m-2 text-2xl basis-4/6">
             {title}
           </h1>
-          <button className="mr-2 text-xl border border-black basis-2/6 pink rounded-md hover:bg-pink-300"
+          <button className="mr-2 text-xl text-white bg-black basis-2/6 rounded-md pinkHover"
             onClick={() => {navigate('/viewcard', {state: {id, title, text, answer, T, F}})}}>
             View <FontAwesomeIcon icon={faEye}></FontAwesomeIcon>
           </button>
-          <button className="text-xl border border-black basis-2/6 pink rounded-md hover:bg-pink-300"
+          <button className="mr-2 text-xl text-white bg-black basis-2/6 rounded-md pinkHover"
             onClick={() => {navigate('/modifycard', {state: {id, title, text, answer}})}}>
             Edit <FontAwesomeIcon icon={faEdit}></FontAwesomeIcon>
           </button>
-          <button className="ml-2 text-xl border border-black basis-2/6 pink rounded-md hover:bg-pink-300"
+          <button className="mr-2 text-xl text-white bg-black basis-2/6 rounded-md pinkHover"
             onClick={modalHandler}>
             Delete <FontAwesomeIcon icon={faTrashAlt}></FontAwesomeIcon>
           </button>

@@ -3,12 +3,14 @@ import React from "react";
 
 
 const USER_QUERY = gql`
+
 query Query {
   getUser {
     id
     name
   }
 }
+
 `
 
 interface LeaderUserProps {

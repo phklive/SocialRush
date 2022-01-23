@@ -5,9 +5,10 @@ import {Link} from "react-router-dom";
 import * as Yup from "yup";
 import {useFormik} from "formik";
 import {newToast} from "../utils/toast";
-import {useDispatch} from "react-redux";
-import {login} from "../redux/authSlice";
 import {ToastContainer} from "react-toastify";
+import {AuthContext} from "./AuhthContext";
+import {useContext} from "react";
+
 
 const REGISTER_QUERY = gql`
 mutation Mutation($name: String!, $email: String!, $password: String!) {
@@ -16,8 +17,8 @@ mutation Mutation($name: String!, $email: String!, $password: String!) {
 `;
 
 const Register: React.FC = () => {
+  const {setSession} = useContext(AuthContext)
   const navigate = useNavigate();
-  const dispatch = useDispatch()
   const [register] = useMutation(REGISTER_QUERY);
 
   const registrationHandler = async (
@@ -28,9 +29,9 @@ const Register: React.FC = () => {
     try {
       const res = await register({variables: {name, email, password}});
       newToast("success", "Account successfully created!", 2000);
-      localStorage.setItem("token", res.data.register);
+      console.log(res)
       setTimeout(() => {
-        dispatch(login())
+        setSession(true)
         navigate("/profile");
       }, 2000);
     } catch (e: any) {

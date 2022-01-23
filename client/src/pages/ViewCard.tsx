@@ -71,8 +71,8 @@ const ViewCard: FC<ViewCardProps> = ({}) => {
           </h1>
         </div>
         <div className="flex flex-row gap-10">
-          <button onClick={showCardPageHandler} className="flex-1 accountBtn">Show card info</button>
-          <button onClick={showDataPageHandler} className={showData ? "flex-1 pink text-black text-2xl rounded-md p-4 my-4" : "flex-1 accountBtn"}>Show card data</button>
+          <button onClick={showCardPageHandler} className="flex-1 p-4 my-4 text-2xl text-white bg-black rounded-md">Show card info</button>
+          <button onClick={showDataPageHandler} className={showData ? "flex-1 pink text-black text-2xl rounded-md p-4 my-4" : "flex-1 text-white bg-black text-2xl rounded-md p-4 my-4"}>Show card data</button>
         </div>
       </div>
     )
@@ -80,14 +80,14 @@ const ViewCard: FC<ViewCardProps> = ({}) => {
 
   return (
     <div className="text-center playCard">
-      <div className="p-2 bg-slate-200 rounded-md">
+      <div className="card">
         <h1 className="accountCardTitle">{state.title}</h1>
         <p className="my-16 text-3xl">{state.text}</p>
         <p className="my-4 text-3xl ">Answer: {state.answer.toString()}</p>
       </div>
       <div className="flex flex-row gap-10">
-        <button onClick={showCardPageHandler} className={!showData ? "flex-1 pink text-black text-2xl rounded-md p-4 my-4" : "flex-1 accountBtn"}>Show card info</button>
-        <button onClick={showDataPageHandler} className="flex-1 accountBtn">Show card data</button>
+        <button onClick={showCardPageHandler} className={!showData ? "flex-1 pink text-black text-2xl rounded-md p-4 my-4" : "flex-1 text-white bg-black text-2xl rounded-md p-4 my-4"}>Show card info</button>
+        <button onClick={showDataPageHandler} className="flex-1 p-4 my-4 text-2xl text-white bg-black rounded-md">Show card data</button>
       </div>
     </div>
   )

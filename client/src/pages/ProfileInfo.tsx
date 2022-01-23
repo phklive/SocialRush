@@ -19,7 +19,9 @@ query User {
 const Profile: React.FC = () => {
   const {loading, error, data} = useQuery(USER_AND_CARDS_QUERY, {fetchPolicy: 'no-cache'})
 
-  if (loading) return <p>loading...</p>
+  console.log(data)
+
+  if (loading) return null
   if (error) return <p>{error.message}</p>
 
   return (

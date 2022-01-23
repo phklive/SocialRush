@@ -50,17 +50,17 @@ const MyCards: React.FC = () => {
           F={card.false}
         />
       ))}
-      <div className="flex flex-row gap-4">
+      <div className="flex flex-row mt-5 gap-4">
         <button
           disabled={start === 0}
-          className="flex-1 accountBtn"
+          className="flex-1 m-2 accountBtn"
           onClick={handlePrevious}
         >
           Previous
         </button>
         <button
           disabled={end >= data.getUserCards.length}
-          className="flex-1 accountBtn"
+          className="flex-1 m-2 accountBtn"
           onClick={handleNext}
         >
           Next

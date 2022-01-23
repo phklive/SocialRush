@@ -1,13 +1,12 @@
-import React from "react";
+import React, {useContext} from "react";
 import {gql, useMutation} from "@apollo/client";
 import {useNavigate} from "react-router";
 import {Link} from "react-router-dom";
 import * as Yup from "yup";
 import {useFormik} from "formik";
 import {newToast} from "../utils/toast";
-import {useDispatch} from "react-redux";
-import {login} from '../redux/authSlice'
 import {ToastContainer} from "react-toastify";
+import {AuthContext} from "./AuhthContext";
 
 const LOGIN_MUTATION = gql`
 mutation LoginUser($email: String!, $password: String!) {
@@ -17,16 +16,16 @@ mutation LoginUser($email: String!, $password: String!) {
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
-  const dispatch = useDispatch()
+  const {setSession} = useContext(AuthContext)
   const [loginMutation] = useMutation(LOGIN_MUTATION);
 
   const loginHandler = async (email: string, password: string) => {
     try {
       const res = await loginMutation({variables: {email, password}});
       newToast("success", "Successfully logged in!", 2000);
-      localStorage.setItem("token", res.data.loginUser);
+      console.log(res)
       setTimeout(() => {
-        dispatch(login())
+        setSession(true)
         navigate("/profile");
       }, 2000);
     } catch (e: any) {

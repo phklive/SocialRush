@@ -1,18 +1,12 @@
 import {gql, useLazyQuery, useMutation} from "@apollo/client";
-import {useState} from "react";
-import {useSelector} from "react-redux";
+import {useContext, useState} from "react";
 import {useNavigate} from "react-router-dom";
 import {ToastContainer} from "react-toastify";
 import {newToast} from "../utils/toast";
 import {Chart as ChartJS, ArcElement, Tooltip, Legend} from 'chart.js';
 import {Doughnut} from 'react-chartjs-2';
-import {
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-} from 'chart.js';
-import {Bar} from 'react-chartjs-2';
+import {AuthContext} from "./AuhthContext";
+
 
 const USER_QUERY = gql`
 query GetUser {
@@ -39,6 +33,7 @@ query Query {
 `;
 
 const REPORT_MUTATION = gql`
+
 mutation Mutation($id: ID!) {
   addCardReport(id: $id) {
     id
@@ -46,6 +41,7 @@ mutation Mutation($id: ID!) {
     report
   }
 }
+
 `;
 
 const ADD_CARD_ANSWER_MUTATION = gql`
@@ -72,15 +68,12 @@ ChartJS.register(
   ArcElement,
   Tooltip,
   Legend,
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
 )
 
-const Home: React.FC = () => {
+const Play: React.FC = () => {
+  const {session} = useContext(AuthContext)
+
   const navigate = useNavigate();
-  const isAuth = useSelector((state: any) => state.auth.isAuth);
 
   const [report, {error: reportError, loading: reportLoading}] = useMutation(REPORT_MUTATION);
   const [addCardAnswer, {data: cardAnswerData, error: cardAnswerError, loading: cardAnswerLoading}] = useMutation(ADD_CARD_ANSWER_MUTATION);
@@ -123,7 +116,7 @@ const Home: React.FC = () => {
 
   const playHandler = async () => {
     try {
-      if (!isAuth) throw new Error("You must be logged in to play.");
+      if (!session) throw new Error("You must be logged in to play.");
       await getUser()
       await getCard();
     } catch (e: any) {
@@ -154,25 +147,25 @@ const Home: React.FC = () => {
     ]
   }
 
-  if (reportLoading) return <p>loading...</p>
+  if (reportLoading) return null
   if (reportError) return <p>{reportError.message}</p>
 
-  if (userScoreLoading) return <p>loading...</p>
+  if (userScoreLoading) return null
   if (userScoreError) return <p>{userScoreError.message}</p>
 
-  if (cardLoading) return <p>loading...</p>
+  if (cardLoading) return null
   if (cardError) return <p>{cardError.message}</p>
 
-  if (userLoading) return <p>loading...</p>
+  if (userLoading) return null
   if (userError) return <p>{userError.message}</p>
 
-  if (cardAnswerLoading) return <p>loading...</p>
+  if (cardAnswerLoading) return null
   if (cardAnswerError) return <p>{cardAnswerError.message}</p>
 
 
   if (!cardData) {
     return (
-      <>
+      <div className="flex">
         <ToastContainer
           style={{width: "450px"}}
           position="top-center"
@@ -186,14 +179,14 @@ const Home: React.FC = () => {
           pauseOnHover
         />
         <button
-          className="w-1/2 ml-2 shadow-2xl centered pink rounded-xl h-1/2 hover:bg-pink-300 hover:font-bold"
+          className=" shadow-2xl m-auto mt-48 w-5/6 h-96 pink rounded-xl hover:bg-pink-300 hover:font-bold"
           onClick={() => {
             playHandler();
           }}
         >
-          <h1 className="text-8xl">PLAY</h1>
+          <h1 className="text-4xl md:text-7xl">PLAY</h1>
         </button>
-      </>
+      </div>
     );
   }
 
@@ -211,31 +204,38 @@ const Home: React.FC = () => {
         pauseOnHover
       />
       <div className="playCard">
-        <div className="p-4 mb-10 text-5xl text-center pink rounded-md">
-          <h1>Your score: {userData.getUser.score}</h1>
+        <div className="p-4 mb-10 text-3xl md:text-5xl text-center pink rounded-md">
+          <h1 className="whitespace-nowrap">Your score: </h1>
+          <h1>{userData.getUser.score}</h1>
         </div>
         {!answered && (
           <>
-            <div className="flex flex-row text-center">
-              <button
-                className="self-center p-2 text-xl border-2 border-black rounded-lg basis-1/6 hover:bg-pink-300"
-                onClick={reportCardHandler}
-              >
-                Report card
-              </button>
-              <h1 className="accountCardTitle basis-4/6">
-                {cardData.getRandomCard.title.charAt(0).toUpperCase() +
-                  cardData.getRandomCard.title.slice(1)}
-              </h1>
-              <p className="self-center text-xl basis-1/6">
-                By {cardData.getRandomCard.author}
-              </p>
+
+            <div className="mb-10 card">
+              <div className="flex flex-row">
+                <button
+                  className="self-center p-2 text-xl border-2 border-black rounded-lg basis-1/6 hover:bg-pink-300 inline md:block"
+                  onClick={reportCardHandler}
+                >
+                  Report 
+                </button>
+                <h1 className="accountCardTitle basis-4/6 whitespace-nowrap inline md:block">
+                  {cardData.getRandomCard.title.charAt(0).toUpperCase() +
+                    cardData.getRandomCard.title.slice(1)}
+                </h1>
+                <p className="self-center text-xl basis-1/6 whitespace-nowrap inline md:block">
+                  By {cardData.getRandomCard.author}
+                </p>
+              </div>
+              <div className="self-center text-center">
+                <p className="mt-16 text-3xl">
+                  {cardData.getRandomCard.text.charAt(0).toUpperCase() +
+                    cardData.getRandomCard.text.slice(1)}
+                </p>
+              </div>
             </div>
-            <p className="self-center mt-16 text-3xl">
-              {cardData.getRandomCard.text.charAt(0).toUpperCase() +
-                cardData.getRandomCard.text.slice(1)}
-            </p>
-            <div className="flex mt-20 mb-2 gap-2 h-1/8">
+
+            <div className="flex gap-2 h-1/8">
               <button
                 className="w-9/12 mr-2 accountBtn"
                 onClick={() => answerHandler(true)}
@@ -243,7 +243,7 @@ const Home: React.FC = () => {
                 <h1 className="text-2xl">True</h1>
               </button>
               <button
-                className="w-9/12 mr-2 accountBtn"
+                className="w-9/12 accountBtn"
                 onClick={() => answerHandler(false)}
               >
                 <h1 className="text-2xl">False</h1>
@@ -295,6 +295,6 @@ const Home: React.FC = () => {
   );
 };
 
-export default Home;
+export default Play;
 
 

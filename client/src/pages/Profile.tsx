@@ -1,28 +1,46 @@
-import React, { useState } from "react";
-import { newToast } from '../utils/toast'
-import { useNavigate } from 'react-router-dom'
+import React, {useContext, useState} from "react";
+import {newToast} from '../utils/toast'
+import {useNavigate} from 'react-router-dom'
 import MyCards from "./MyCards";
 import ProfileInfo from "./ProfileInfo";
-import { useDispatch } from "react-redux";
-import { logout } from "../redux/authSlice";
 import Modal from "../design/Modal";
-import { ToastContainer } from "react-toastify";
+import {ToastContainer} from "react-toastify";
+import {AuthContext} from "./AuhthContext";
+
+const LOGOUT_MUTATION = `
+mutation Mutation {
+  logoutUser
+}
+`
 
 const Profile: React.FC = () => {
   const [modal, setModal] = useState(false)
   const navigate = useNavigate()
-  const dispatch = useDispatch()
+  const {setSession} = useContext(AuthContext)
 
   const modalHandler = () => {
     setModal((oldstate) => !oldstate)
   }
 
+  const logout = () => {
+    fetch('http://localhost:4000/graphql', {
+      method: 'POST',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: JSON.stringify({query: LOGOUT_MUTATION})
+    })
+      .then(r => r.json())
+      .then(data => setSession(false));
+  }
+
   const disconnectionHandler = () => {
-    localStorage.removeItem("token");
     newToast("success", "You have been successfully disconnected!", 2000);
     setTimeout(() => {
-      dispatch(logout())
       navigate("/");
+      logout()
     }, 2000);
   };
 
@@ -37,7 +55,7 @@ const Profile: React.FC = () => {
         exec={disconnectionHandler}
       />
       <ToastContainer
-        style={{width:"500px"}}
+        style={{width: "600px"}}
         position="top-center"
         autoClose={5000}
         hideProgressBar={false}
@@ -48,12 +66,12 @@ const Profile: React.FC = () => {
         draggable
         pauseOnHover
       />
-      <div className="accountCard flex-col p-2">
+      <div className="flex-col p-2 accountCard">
         <ProfileInfo />
         <MyCards />
         <button
           onClick={modalHandler}
-          className="accountBtn"
+          className="m-2 accountBtn"
         >
           Disconnect
         </button>

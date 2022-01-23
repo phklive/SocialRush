@@ -1,49 +1,56 @@
-import http from "http";
 import express from "express";
+import {graphqlHTTP} from "express-graphql";
+import {makeExecutableSchema} from "@graphql-tools/schema";
 import connectToDB from "./database/db.js";
 import helmet from 'helmet'
+import cors from 'cors'
 import typeDefs from "./graphql/typeDefs.js";
 import resolvers from "./graphql/resolvers.js";
-import jwt from "express-jwt";
-import { ApolloServer } from "apollo-server-express";
-import { ApolloServerPluginDrainHttpServer } from "apollo-server-core";
 import "dotenv/config";
+import session from "express-session";
+import MongoStore from "connect-mongo";
 
-async function startApolloServer(typeDefs, resolvers) {
-  const app = express();
-  const httpServer = http.createServer(app);
-  const port = process.env.PORT || 4000;
-  const checkJwt = jwt({
-    secret: process.env.JWT_SECRET,
-    algorithms: ["HS256"],
-    credentialsRequired: false,
-  });
+const schema = makeExecutableSchema({
+  typeDefs,
+  resolvers
+})
+const app = express();
+const port = process.env.PORT || 4000;
 
-  connectToDB();
+connectToDB();
 
-  const server = new ApolloServer({
-    typeDefs,
-    resolvers,
-    context: (req) => {
-      return req 
+app.use(helmet())
+
+app.use(
+  session({
+    name: "qid",
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      httpOnly: true,
+      sameSite: true,
+      secure: process.env.NODE_ENV === "production",
+      maxAge: 1000 * 60 * 60 * 24 * 7 // 7 days
     },
-    plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
-  });
+    store: MongoStore.create({
+      mongoUrl: process.env.DB || 'mongodb+srv://phk:ZJqeilOJN88IjrQ1@trueorfalsedatabase.zjlxx.mongodb.net/trueorfalse?retryWrites=true&w=majority'
+    })
+  })
+);
 
-  await server.start();
+app.use(cors({
+  origin: 'http://localhost:3000',
+  credentials: true
+}));
 
-  app.use(helmet(),checkJwt);
+app.use(
+  "/graphql",
+  graphqlHTTP(req => ({
+    schema,
+    context: {req},
+  }))
+);
 
-  server.applyMiddleware({ app, path: '/' });
-
-  if (process.env.NODE_ENV === 'production') {
-    app.use(express.static('../client/build/'))
-  }
-
-  await new Promise((resolve) => httpServer.listen({ port }, resolve));
-  console.log(
-    `🚀 Server ready at http://localhost:${port}${server.graphqlPath}`
-  );
-}
-
-startApolloServer(typeDefs, resolvers);
+app.listen(4000);
+console.log('Running a GraphQL API server at http://localhost:4000/graphql');

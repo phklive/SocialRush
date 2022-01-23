@@ -34,19 +34,19 @@
 }
 
 .playCard {
-  @apply flex flex-col h-1/2 w-2/3 bg-white rounded-lg drop-shadow-2xl  border-8 pinkBorder m-auto p-10 mt-40
+  @apply flex flex-col h-1/2 w-4/5 bg-white rounded-lg drop-shadow-2xl border-8 pinkBorder m-auto p-10 mt-20
 }
 
 .accountCard {
-  @apply flex flex-col h-1/2 w-1/3 bg-white rounded-lg drop-shadow-2xl  border-8 pinkBorder m-auto py-20 mt-64
+  @apply flex flex-col h-1/2 w-1/3 bg-white rounded-lg drop-shadow-2xl  border-8 pinkBorder m-auto py-10 mt-64
 }
 
 .accountCardTitle {
-  @apply text-4xl mb-4 text-center
+  @apply text-2xl md:text-4xl mb-4 text-center
 }
 
 .accountCardSubTitle {
-  @apply text-slate-500 text-xl mb-4 text-center mb-5
+  @apply text-slate-500 text-xl mb-4 text-center 
 }
 
 .innerAccountCard {
@@ -54,7 +54,7 @@
 }
 
 .accountBtn {
-  @apply bg-black text-white text-2xl rounded-md p-4 my-4 
+  @apply bg-black text-white text-2xl rounded-md p-4 
 }
 
 .accountBtn:hover {
@@ -100,10 +100,21 @@
 
 .pinkHover:hover {
   background-color: #EAD9DD;
+  color: black
 }
 
 .accountBtn:disabled {
   @apply bg-gray-400 text-white cursor-not-allowed
 }
 
+.complementary {
+  background-color: #d9eae6;
+}
 
+.card {
+  @apply p-10 bg-gray-200 rounded-md
+}
+
+.list {
+@apply md:flex md:items-center z-[-1] md:z-auto md:static absolute w-full left-0 md:w-auto md:py-0 py-2 md:pl-0 pl-7 md:opacity-100 opacity-0 top-[-400px] transition-all ease-in duration-500
+}
