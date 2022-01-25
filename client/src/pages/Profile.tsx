@@ -1,46 +1,46 @@
-import React, {useContext, useState} from "react";
-import {newToast} from '../utils/toast'
-import {useNavigate} from 'react-router-dom'
+import React, { useContext, useState } from "react";
+import { newToast } from "../utils/toast";
+import { useNavigate } from "react-router-dom";
 import MyCards from "./MyCards";
 import ProfileInfo from "./ProfileInfo";
 import Modal from "../design/Modal";
-import {ToastContainer} from "react-toastify";
-import {AuthContext} from "./AuhthContext";
+import { ToastContainer } from "react-toastify";
+import { AuthContext } from "./AuhthContext";
 
 const LOGOUT_MUTATION = `
 mutation Mutation {
   logoutUser
 }
-`
+`;
 
 const Profile: React.FC = () => {
-  const [modal, setModal] = useState(false)
-  const navigate = useNavigate()
-  const {setSession} = useContext(AuthContext)
+  const [modal, setModal] = useState(false);
+  const navigate = useNavigate();
+  const { setSession } = useContext(AuthContext);
 
   const modalHandler = () => {
-    setModal((oldstate) => !oldstate)
-  }
+    setModal((oldstate) => !oldstate);
+  };
 
   const logout = () => {
-    fetch('http://localhost:4000/graphql', {
-      method: 'POST',
-      credentials: 'include',
+    fetch("http://localhost:4000/graphql", {
+      method: "POST",
+      credentials: "include",
       headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
+        "Content-Type": "application/json",
+        Accept: "application/json",
       },
-      body: JSON.stringify({query: LOGOUT_MUTATION})
+      body: JSON.stringify({ query: LOGOUT_MUTATION }),
     })
-      .then(r => r.json())
+      .then((r) => r.json())
       .then(() => setSession(false));
-  }
+  };
 
   const disconnectionHandler = () => {
     newToast("success", "You have been successfully disconnected!", 2000);
     setTimeout(() => {
       navigate("/");
-      logout()
+      logout();
     }, 2000);
   };
 
@@ -55,7 +55,7 @@ const Profile: React.FC = () => {
         exec={disconnectionHandler}
       />
       <ToastContainer
-        style={{width: "600px"}}
+        style={{ width: "600px" }}
         position="top-center"
         autoClose={5000}
         hideProgressBar={false}
@@ -66,13 +66,10 @@ const Profile: React.FC = () => {
         draggable
         pauseOnHover
       />
-      <div className="flex-col accountCard p-2">
+      <div className="flex-col playCard w-11/12 md:w-1/2 p-2">
         <ProfileInfo />
         <MyCards />
-        <button
-          onClick={modalHandler}
-          className="m-2 accountBtn"
-        >
+        <button onClick={modalHandler} className="m-2 accountBtn">
           Disconnect
         </button>
       </div>

@@ -1,25 +1,27 @@
 import React from "react";
 import "../styles/index.css";
-import {useNavigate} from "react-router";
-import {gql, useMutation} from "@apollo/client";
-import {useFormik} from "formik";
+import { useNavigate } from "react-router";
+import { gql, useMutation } from "@apollo/client";
+import { useFormik } from "formik";
 import * as Yup from "yup";
-import {newToast} from "../utils/toast";
-import {ToastContainer} from "react-toastify";
-import {USER_AND_CARDS_QUERY} from "./ProfileInfo";
+import { newToast } from "../utils/toast";
+import { ToastContainer } from "react-toastify";
+import { USER_AND_CARDS_QUERY } from "./ProfileInfo";
 
 const CREATE_CARD_MUTATION = gql`
-mutation Mutation($title: String!, $text: String!, $answer: Boolean!) {
-  createCard(title: $title, text: $text, answer: $answer) {
-    title
+  mutation Mutation($title: String!, $text: String!, $answer: Boolean!) {
+    createCard(title: $title, text: $text, answer: $answer) {
+      title
+    }
   }
-}
 `;
 
 const CreateCard: React.FC = () => {
   const navigate = useNavigate();
 
-  const [createCard] = useMutation(CREATE_CARD_MUTATION, {refetchQueries: [USER_AND_CARDS_QUERY]})
+  const [createCard] = useMutation(CREATE_CARD_MUTATION, {
+    refetchQueries: [USER_AND_CARDS_QUERY],
+  });
 
   const formik = useFormik({
     initialValues: {
@@ -42,7 +44,7 @@ const CreateCard: React.FC = () => {
         text: values.text,
         answer: values.answer === "true",
       };
-      createCard({variables});
+      createCard({ variables });
       newToast("success", "Success, new card created!", 2000);
       setTimeout(() => {
         navigate("/profile");
@@ -53,7 +55,7 @@ const CreateCard: React.FC = () => {
   return (
     <>
       <ToastContainer
-        style={{width: "500px"}}
+        style={{ width: "500px" }}
         position="top-center"
         autoClose={5000}
         hideProgressBar={false}
@@ -64,9 +66,11 @@ const CreateCard: React.FC = () => {
         draggable
         pauseOnHover
       />
-      <div className="p-4 accountCard">
+      <div className="p-4 playCard w-11/12 md:w-1/2">
         <h1 className="accountCardTitle">Create your card</h1>
-        <h1 className="accountCardSubTitle">Create your very own cards and see what other people think</h1>
+        <h1 className="accountCardSubTitle">
+          Create your very own cards and see what other people think
+        </h1>
         <form
           className="flex flex-col justify-center m-2"
           onSubmit={formik.handleSubmit}
@@ -90,7 +94,7 @@ const CreateCard: React.FC = () => {
           </label>
           <textarea
             name="text"
-            rows={8}
+            rows={6}
             maxLength={500}
             className="resize-none formInput"
             onChange={formik.handleChange}
@@ -101,7 +105,7 @@ const CreateCard: React.FC = () => {
             <p className="formError">{formik.errors.text}</p>
           ) : null}
           <label htmlFor="answer" className="formLabel">
-           Your answer
+            Your answer
           </label>
           <select
             className="formInput"

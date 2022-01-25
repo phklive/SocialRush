@@ -1,31 +1,31 @@
-import React, {useContext} from "react";
-import {gql, useMutation} from "@apollo/client";
-import {useNavigate} from "react-router";
-import {Link} from "react-router-dom";
+import React, { useContext } from "react";
+import { gql, useMutation } from "@apollo/client";
+import { useNavigate } from "react-router";
+import { Link } from "react-router-dom";
 import * as Yup from "yup";
-import {useFormik} from "formik";
-import {newToast} from "../utils/toast";
-import {ToastContainer} from "react-toastify";
-import {AuthContext} from "./AuhthContext";
+import { useFormik } from "formik";
+import { newToast } from "../utils/toast";
+import { ToastContainer } from "react-toastify";
+import { AuthContext } from "./AuhthContext";
 
 const LOGIN_MUTATION = gql`
-mutation LoginUser($email: String!, $password: String!) {
-  loginUser(email: $email, password: $password)
-}
+  mutation LoginUser($email: String!, $password: String!) {
+    loginUser(email: $email, password: $password)
+  }
 `;
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
-  const {setSession} = useContext(AuthContext)
+  const { setSession } = useContext(AuthContext);
   const [loginMutation] = useMutation(LOGIN_MUTATION);
 
   const loginHandler = async (email: string, password: string) => {
     try {
-      const res = await loginMutation({variables: {email, password}});
+      const res = await loginMutation({ variables: { email, password } });
       newToast("success", "Successfully logged in!", 2000);
-      console.log(res)
+      console.log(res);
       setTimeout(() => {
-        setSession(true)
+        setSession(true);
         navigate("/play");
       }, 2000);
     } catch (e: any) {
@@ -50,7 +50,7 @@ const Login: React.FC = () => {
   return (
     <>
       <ToastContainer
-        style={{width: "500px"}}
+        style={{ width: "500px" }}
         position="top-center"
         autoClose={5000}
         hideProgressBar={false}
@@ -59,11 +59,14 @@ const Login: React.FC = () => {
         rtl={false}
         pauseOnFocusLoss
         draggable
-        pauseOnHover />
-      <div className="accountCard">
+        pauseOnHover
+      />
+      <div className="playCard w-5/6 md:w-1/2">
         <div className="innerAccountCard">
           <h1 className="accountCardTitle">Welcome back</h1>
-          <p className="accountCardSubTitle">Welcome back! Please enter your details.</p>
+          <p className="accountCardSubTitle">
+            Welcome back! Please enter your details.
+          </p>
           <form className="flex flex-col" onSubmit={formik.handleSubmit}>
             <label htmlFor="email" className="formLabel">
               Email
@@ -75,7 +78,8 @@ const Login: React.FC = () => {
               onBlur={formik.handleBlur}
               value={formik.values.email}
               placeholder="Enter your email"
-              className="formInput" />
+              className="formInput"
+            />
             {formik.errors.email && formik.touched.email ? (
               <p className="formError">{formik.errors.email}</p>
             ) : null}
@@ -89,7 +93,8 @@ const Login: React.FC = () => {
               onBlur={formik.handleBlur}
               value={formik.values.password}
               placeholder="&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;"
-              className="formInput" />
+              className="formInput"
+            />
             {formik.errors.password && formik.touched.password ? (
               <p className="formError">{formik.errors.password}</p>
             ) : null}
@@ -97,14 +102,18 @@ const Login: React.FC = () => {
               <span className="text-xl text-slate-400">
                 Don't have an account?
               </span>
-              <Link className="text-xl hover:text-blue-800" to="/register"> Sign up!</Link>
+              <Link className="text-xl hover:text-blue-800" to="/register">
+                {" "}
+                Sign up!
+              </Link>
             </div>
             <button type="submit" className="accountBtn">
               Sign in
             </button>
           </form>
         </div>
-      </div></>
+      </div>
+    </>
   );
 };
 

@@ -1,51 +1,49 @@
-import {Routes, Route} from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import NavBar from "../design/NavBar";
 import CreateCard from "./CreateCard";
 import Profile from "./Profile";
 import Login from "./Login";
 import Register from "./Register";
 import LeaderBoard from "./LeaderBoard";
-import {ProtectedRoute} from '../utils/auth'
+import { ProtectedRoute } from "../utils/auth";
 import NotFound from "./NotFound";
 import Landing from "./Landing";
 import Play from "./Play";
 import ViewCard from "./ViewCard";
-import {AuthContext} from "./AuhthContext";
-import {useEffect, useState} from "react";
+import { AuthContext } from "./AuhthContext";
+import { useEffect, useState } from "react";
 
 const AUTH_QUERY = `
 query Query {
   isAuth 
 }
-`
+`;
 
 const App = () => {
-  const tennis = 'haha'
+  const tennis = "haha";
 
-  const [session, setSession] = useState(false)
-  
-  const poulet = () => {
-    
-  } 
+  const [session, setSession] = useState(false);
+
+  const poulet = () => {};
 
   useEffect(() => {
-    fetch('http://localhost:4000/graphql', {
-      method: 'POST',
-      credentials: 'include',
+    fetch("http://localhost:4000/graphql", {
+      method: "POST",
+      credentials: "include",
       headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
+        "Content-Type": "application/json",
+        Accept: "application/json",
       },
-      body: JSON.stringify({query: AUTH_QUERY})
+      body: JSON.stringify({ query: AUTH_QUERY }),
     })
-      .then(r => r.json())
-      .then(data => setSession(data.data.isAuth));
-  }, [])
+      .then((r) => r.json())
+      .then((data) => setSession(data.data.isAuth));
+  }, []);
 
   return (
     <>
       <div id="portal" />
-      <AuthContext.Provider value={{session, setSession}}>
+      <AuthContext.Provider value={{ session, setSession }}>
         <NavBar />
         <Routes>
           <Route element={<ProtectedRoute />}>
@@ -62,7 +60,7 @@ const App = () => {
         </Routes>
       </AuthContext.Provider>
     </>
-  )
-}
+  );
+};
 
-export default App
+export default App;
