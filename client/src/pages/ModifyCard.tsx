@@ -9,19 +9,17 @@ import { ToastContainer } from "react-toastify";
 
 
 const MODIFY_CARD_MUTATION = gql`
-mutation Mutation($id: ID!, $title: String!, $text: String!, $answer: Boolean!) {
-  modifyCard(id: $id, title: $title, text: $text, answer: $answer) {
+mutation Mutation($id: ID!, $title: String!, $text: String!) {
+  modifyCard(id: $id, title: $title, text: $text) {
     id
     title
     text
-    answer
   }
 }
 `;
 
 const ModifyCard: React.FC = () => {
   const { state }: any = useLocation()
-  const answer = state.answer.toString()
   const navigate = useNavigate();
   const [modifyCard] = useMutation(MODIFY_CARD_MUTATION)
 
@@ -29,7 +27,6 @@ const ModifyCard: React.FC = () => {
     initialValues: {
       title: state.title,
       text: state.text,
-      answer
     },
     validationSchema: Yup.object({
       title: Yup.string()
@@ -38,7 +35,6 @@ const ModifyCard: React.FC = () => {
       text: Yup.string()
         .min(30, "Text can't be too short")
         .required("Text is required."),
-      answer: Yup.boolean().required("Answer is required."),
     }),
     onSubmit: async (values) => {
       try {
@@ -46,7 +42,6 @@ const ModifyCard: React.FC = () => {
           id: state.id,
           title: values.title,
           text: values.text,
-          answer: values.answer === 'true',
         };
         await modifyCard({ variables });
         newToast("success", "Success, card modified!", 2000);
@@ -109,18 +104,6 @@ const ModifyCard: React.FC = () => {
           {formik.errors.text && formik.touched.text ? (
             <p className="formError">{formik.errors.text}</p>
           ) : null}
-          <label htmlFor="answer" className="formLabel">
-            Answer
-          </label>
-          <select
-            className="formInput"
-            name="answer"
-            onChange={formik.handleChange}
-            value={formik.values.answer}
-          >
-            <option value="true">True</option>
-            <option value="false">False</option>
-          </select>
           <div className="flex flex-row gap-2">
             <button type="reset" className="accountBtn flex-1" onClick={() => { navigate('/profile') }}>
               Cancel

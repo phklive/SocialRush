@@ -1,5 +1,4 @@
 import {User, Card} from "../database/schemas.js";
-import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import {v4 as uuidv4} from 'uuid'
 
@@ -42,6 +41,16 @@ const resolvers = {
 
       return await Card.find({author: req.session.user.name}).sort({_id: -1})
     },
+
+    getUserRanking: async (_, args, {req}) => {
+      if (!req.session.user) throw new Error('You are not authenticated!')
+
+      const users = await User.find({}).sort({highScore: -1})
+
+      const user = users.findIndex((user) => user.name === req.session.user.name) + 1 
+
+      return user
+    }
   },
 
   Mutation: {
@@ -63,7 +72,9 @@ const resolvers = {
         name,
         email,
         password: await bcrypt.hash(password, 10),
-        score: 0,
+        highScore: 0,
+        wolf: 0,
+        sheep: 0,
       });
 
       const user = await newUser.save()
@@ -121,34 +132,27 @@ const resolvers = {
         report: 0,
         title,
         text,
-        answer,
         author: req.session.user.name,
-        true: 0,
-        false: 0,
+        true: answer === true ? 1 : 0,
+        false: answer === false ? 1 : 0,
       });
+
       return await newCard.save();
-
-    },
-
-    modifyCard: async (_, {id, title, text, answer}) => {
-      return Card.findOneAndUpdate({id}, {title, text, answer}, {new: true})
     },
 
     deleteCard: async (_, {id}) => {
       return Card.findOneAndDelete({id})
     },
 
-    addUserScore: async (_, args, {req}) => {
+    gameFinished: async (_, {score, wolf, sheep}, {req}) => {
       if (!req.session.user) {
         throw new Error('You are not authenticated!')
       }
+      const user = await User.findOne({id: req.session.user.id})
 
-      const user = await User.findOneAndUpdate(
-        {name: req.session.user.name},
-        {$inc: {score: 1}},
-        {new: true}
-      );
-      return user;
+      if (user.highScore > score) return User.findOneAndUpdate({id: req.session.user.id}, {$inc: { wolf: wolf, sheep: sheep }}, {new: true})
+
+      return User.findOneAndUpdate({id: req.session.user.id}, {$inc: {highScore: score, wolf: wolf, sheep: sheep }}, {new: true}) 
     },
 
     addCardReport: async (_, {id}) => {
@@ -160,7 +164,6 @@ const resolvers = {
       if (bool === true) return await Card.findOneAndUpdate({id}, {$inc: {true: 1}}, {new: true})
       if (bool === false) return await Card.findOneAndUpdate({id}, {$inc: {false: 1}}, {new: true})
     },
-
 
   },
 };

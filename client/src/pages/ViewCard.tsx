@@ -1,7 +1,9 @@
-import React, {FC, useState} from "react"
+import React, { useState} from "react"
 import {Chart as ChartJS, ArcElement, Tooltip, Legend} from 'chart.js';
 import {Doughnut} from 'react-chartjs-2';
-import {useLocation} from 'react-router-dom'
+import {useLocation, useNavigate} from 'react-router-dom'
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
+import {faArrowLeft} from '@fortawesome/free-solid-svg-icons'
 
 
 ChartJS.register(
@@ -12,7 +14,8 @@ ChartJS.register(
 
 interface ViewCardProps {}
 
-const ViewCard: FC<ViewCardProps> = ({}) => {
+const ViewCard: React.FC<ViewCardProps> = ({}) => {
+  const navigate = useNavigate()
   const {state}: any = useLocation()
   const [showData, setShowData] = useState(false)
 
@@ -21,7 +24,7 @@ const ViewCard: FC<ViewCardProps> = ({}) => {
     datasets: [
       {
         label: 'tennis',
-        data: [state.T, state.F],
+        data: [state.F, state.T],
         backgroundColor: [
           'rgba(255, 99, 132, 0.9)',
           'rgba(75, 192, 192, 0.9)',
@@ -47,6 +50,7 @@ const ViewCard: FC<ViewCardProps> = ({}) => {
   if (showData) {
     return (
       <div className="playCard">
+      <FontAwesomeIcon icon={faArrowLeft} className="text-2xl mb-4 cursor-pointer backHover" onClick={() => {navigate('/profile')}}/>
         <h1 className="accountCardTitle">{state.title}</h1>
         <div className="self-center w-1/3 m-5 h-1/3">
           <Doughnut
@@ -80,10 +84,10 @@ const ViewCard: FC<ViewCardProps> = ({}) => {
 
   return (
     <div className="text-center playCard">
+      <FontAwesomeIcon icon={faArrowLeft} className="text-2xl mb-4 cursor-pointer backHover" onClick={() => {navigate('/profile')}}/>
       <div className="card">
         <h1 className="accountCardTitle">{state.title}</h1>
         <p className="my-16 text-3xl">{state.text}</p>
-        <p className="my-4 text-3xl ">Answer: {state.answer.toString()}</p>
       </div>
       <div className="flex flex-row gap-10">
         <button onClick={showCardPageHandler} className={!showData ? "flex-1 pink text-black text-2xl rounded-md p-4 my-4" : "flex-1 text-white bg-black text-2xl rounded-md p-4 my-4"}>Show card info</button>

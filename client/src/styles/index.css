@@ -7,6 +7,10 @@
   background-image: url('./assets/bgg.png');
 }
 
+body {
+  padding-bottom: 50px;
+}
+
 .pink {
   background-color: #EAD9DD;
 }
@@ -34,11 +38,11 @@
 }
 
 .playCard {
-  @apply flex flex-col h-1/2 w-4/5 bg-white rounded-lg drop-shadow-2xl border-8 pinkBorder m-auto p-10 mt-20
+  @apply flex flex-col h-1/2 w-4/5 bg-white rounded-lg drop-shadow-2xl border-8 pinkBorder m-auto p-4 mt-auto
 }
 
 .accountCard {
-  @apply flex flex-col h-1/2 w-1/3 bg-white rounded-lg drop-shadow-2xl  border-8 pinkBorder m-auto py-10 mt-64
+  @apply flex flex-col h-1/2 w-1/3 bg-white rounded-lg drop-shadow-2xl  border-8 pinkBorder m-auto 
 }
 
 .accountCardTitle {
@@ -75,7 +79,7 @@
 }
 
 .formInput {
-  @apply border-slate-400 border-4 rounded-md p-2 outline-none text-xl
+  @apply border-slate-400 border-4 rounded-md p-2 outline-none text-xl bg-white
 }
 
 .formLabel {
@@ -91,7 +95,7 @@
 }
 
 .active {
-  @apply border-pink-300
+  @apply underline
 }
 
 .pinkBorder {
@@ -103,6 +107,10 @@
   color: black
 }
 
+.backHover:hover {
+  color:  #EAD9DD;
+}
+
 .accountBtn:disabled {
   @apply bg-gray-400 text-white cursor-not-allowed
 }
@@ -112,7 +120,7 @@
 }
 
 .card {
-  @apply p-10 bg-gray-200 rounded-md
+  @apply p-10 pink rounded-md
 }
 
 .list {

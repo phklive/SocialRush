@@ -9,7 +9,6 @@ export const MYCARDS_QUERY = gql`
       id
       title
       text
-      answer
       true
       false
     }
@@ -45,7 +44,6 @@ const MyCards: React.FC = () => {
           id={card.id}
           title={card.title}
           text={card.text}
-          answer={card.answer}
           T={card.true}
           F={card.false}
         />

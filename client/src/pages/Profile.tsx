@@ -33,7 +33,7 @@ const Profile: React.FC = () => {
       body: JSON.stringify({query: LOGOUT_MUTATION})
     })
       .then(r => r.json())
-      .then(data => setSession(false));
+      .then(() => setSession(false));
   }
 
   const disconnectionHandler = () => {
@@ -66,7 +66,7 @@ const Profile: React.FC = () => {
         draggable
         pauseOnHover
       />
-      <div className="flex-col p-2 accountCard">
+      <div className="flex-col accountCard p-2">
         <ProfileInfo />
         <MyCards />
         <button

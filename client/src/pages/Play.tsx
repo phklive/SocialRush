@@ -12,8 +12,7 @@ const USER_QUERY = gql`
 query GetUser {
   getUser {
     id
-    score
-    name
+    highScore
   }
 }
 `
@@ -24,7 +23,6 @@ query Query {
     id
     title
     text
-    answer
     author
     true
     false
@@ -33,12 +31,9 @@ query Query {
 `;
 
 const REPORT_MUTATION = gql`
-
 mutation Mutation($id: ID!) {
   addCardReport(id: $id) {
     id
-    title
-    report
   }
 }
 
@@ -48,19 +43,22 @@ const ADD_CARD_ANSWER_MUTATION = gql`
 mutation Mutation($id: ID!, $bool: Boolean!) {
   addCardAnswer(id: $id, bool: $bool) {
     id
-    true
-    false
   }
 }
 `;
 
 
-const ADD_USER_SCORE_MUTATION = gql`
-mutation AddUserScore {
-  addUserScore {
-    id
-    score
-  }
+const GAME_FINISHED_MUTATION = gql`
+mutation Mutation($score: Int!, $wolf: Int!, $sheep: Int!){
+	gameFinished(score: $score, wolf: $wolf, sheep: $sheep) {
+		id
+		name
+		email
+		password
+		highScore
+		wolf
+		sheep
+	}
 }
 `
 
@@ -76,56 +74,28 @@ const Play: React.FC = () => {
   const navigate = useNavigate();
 
   const [report, {error: reportError, loading: reportLoading}] = useMutation(REPORT_MUTATION);
-  const [addCardAnswer, {data: cardAnswerData, error: cardAnswerError, loading: cardAnswerLoading}] = useMutation(ADD_CARD_ANSWER_MUTATION);
-  const [addUserScore, {error: userScoreError, loading: userScoreLoading}] = useMutation(ADD_USER_SCORE_MUTATION)
+  const [addCardAnswer, {error: cardAnswerError, loading: cardAnswerLoading}] = useMutation(ADD_CARD_ANSWER_MUTATION);
+  const [gameFinished, {error: gameFinishedError, loading: gameFinishedLoading}] = useMutation(GAME_FINISHED_MUTATION)
   const [getCard, {data: cardData, error: cardError, loading: cardLoading}] = useLazyQuery(CARD_QUERY, {fetchPolicy: 'no-cache'});
+
+  // get user highScore
   const [getUser, {data: userData, error: userError, loading: userLoading}] = useLazyQuery(USER_QUERY)
 
-  const [answered, setAnswered] = useState(false);
+  // UI state
+  const [showPlayCard, setShowPlayCard] = useState(true)
+  const [showFirstCard, setShowFirstCard] = useState(false);
+  const [showSecondCard, setShowSecondCard] = useState(false);
+  const [showResultCard, setShowResultCard] = useState(false)
   const [answeredCorrectly, setAnsweredCorrectly] = useState(false)
 
-
-  const reportCardHandler = async () => {
-    setAnswered(false);
-    await report({variables: {id: cardData.getRandomCard.id}});
-    newToast("success", "Card reported", 2000);
-    await getCard();
-  };
-
-  const answerHandler = async (answer: boolean) => {
-    setAnswered(true);
-    if (answer === true) {
-      await addCardAnswer({variables: {id: cardData.getRandomCard.id, bool: true}});
-    }
-    if (answer === false) {
-      await addCardAnswer({variables: {id: cardData.getRandomCard.id, bool: false}});
-    }
-    if (answer === cardData.getRandomCard.answer) {
-      setAnsweredCorrectly(true)
-      await addUserScore()
-    } else {
-      setAnsweredCorrectly(false)
-    }
-  };
-
-  const nextCardHandler = async () => {
-    setAnswered(false);
-    setAnsweredCorrectly(false)
-    await getCard();
-  };
-
-  const playHandler = async () => {
-    try {
-      if (!session) throw new Error("You must be logged in to play.");
-      await getUser()
-      await getCard();
-    } catch (e: any) {
-      newToast("error", e.message, 2000);
-      setTimeout(() => {
-        navigate("/login");
-      }, 2000);
-    }
-  };
+  // Game state
+  const [firstCardAnswer, setFirstCardAnswer] = useState(false)
+  const [secondCardAnswer, setSecondCardAnswer] = useState(false)
+  const [game, setGame] = useState(false)
+  const [lives, setLives] = useState(3)
+  const [wolf, setWolf] = useState(0)
+  const [sheep, setSheep] = useState(0)
+  const [score, setScore] = useState(0)
 
 
   const chartDataset = {
@@ -133,7 +103,7 @@ const Play: React.FC = () => {
     datasets: [
       {
         label: 'tennis',
-        data: [cardAnswerData?.addCardAnswer.false, cardAnswerData?.addCardAnswer.true],
+        data: [cardData?.getRandomCard.false, cardData?.getRandomCard.true],
         backgroundColor: [
           'rgba(255, 99, 132, 0.9)',
           'rgba(75, 192, 192, 0.9)',
@@ -147,11 +117,146 @@ const Play: React.FC = () => {
     ]
   }
 
+
+  const reportCardHandler = async () => {
+    await report({variables: {id: cardData.getRandomCard.id}});
+    newToast("success", "Card reported", 2000);
+    await getCard();
+  };
+
+  const playHandler = async () => {
+    try {
+      if (!session) throw new Error("You must be logged in to play.");
+      await getUser()
+      await getCard()
+      setShowPlayCard(false)
+      setGame(true)
+      setShowFirstCard(true)
+    } catch (e: any) {
+      newToast("error", e.message, 2000);
+      setTimeout(() => {
+        navigate("/login");
+      }, 2000);
+    }
+  };
+
+
+  const firstCardHandler = async (answer: boolean) => {
+    // Player answered true
+    if (answer === true) {
+      await addCardAnswer({variables: {id: cardData.getRandomCard.id, bool: true}})
+      setFirstCardAnswer(true)
+      setShowFirstCard(false)
+      setShowSecondCard(true)
+    }
+
+    // Player answered false
+    if (answer === false) {
+      await addCardAnswer({variables: {id: cardData.getRandomCard.id, bool: false}})
+      setFirstCardAnswer(false)
+      setShowFirstCard(false)
+      setShowSecondCard(true)
+    }
+  }
+
+  const secondCardHandler = async (answer: boolean) => {
+
+    setSecondCardAnswer(answer)
+    // Player answered true
+    if (answer === true) {
+
+      if (cardData.getRandomCard.true > cardData.getRandomCard.false) {
+        setAnsweredCorrectly(true)
+        setScore((oldScore) => oldScore + 1)
+        setShowSecondCard(false)
+        setShowResultCard(true)
+        if ( firstCardAnswer === true ) setSheep((oldSheep) => oldSheep + 1) 
+        if ( firstCardAnswer === false ) setWolf((oldWolf) => oldWolf + 1)
+      }
+
+      if (cardData.getRandomCard.true < cardData.getRandomCard.false) {
+        setAnsweredCorrectly(false)
+        setLives((oldLives) => oldLives - 1)
+        setShowSecondCard(false)
+        setShowResultCard(true)
+        if ( firstCardAnswer === true ) setWolf((oldWolf) => oldWolf + 1)
+        if ( firstCardAnswer === false ) setSheep((oldSheep) => oldSheep + 1) 
+      }
+
+      if (cardData.getRandomCard.true === cardData.getRandomCard.false) {
+        setAnsweredCorrectly(true)
+        setScore((oldScore) => oldScore + 1)
+        setShowSecondCard(false)
+        setShowResultCard(true)
+      }
+
+    }
+
+    // Player answered false
+    if (answer === false) {
+
+      if (cardData.getRandomCard.false > cardData.getRandomCard.true) {
+        setAnsweredCorrectly(true)
+        setScore((oldScore) => oldScore + 1)
+        setShowSecondCard(false)
+        setShowResultCard(true)
+        if ( firstCardAnswer === false ) setSheep((oldSheep) => oldSheep + 1) 
+        if ( firstCardAnswer === true ) setWolf((oldWolf) => oldWolf + 1)
+      }
+      
+      if (cardData.getRandomCard.false < cardData.getRandomCard.true) {
+        setAnsweredCorrectly(false)
+        setLives((oldLives) => oldLives - 1)
+        setShowSecondCard(false)
+        setShowResultCard(true)
+        if ( firstCardAnswer === false ) setWolf((oldWolf) => oldWolf + 1)
+        if ( firstCardAnswer === true ) setSheep((oldSheep) => oldSheep + 1) 
+      }
+
+      if (cardData.getRandomCard.false === cardData.getRandomCard.true) {
+        setAnsweredCorrectly(true)
+        setScore((oldScore) => oldScore + 1)
+        setShowSecondCard(false)
+        setShowResultCard(true)
+      }
+    }
+
+  }
+
+  const nextCardHandler = async () => {
+    if (lives !== 0) {
+    setShowFirstCard(true)
+    setShowSecondCard(false)
+    setShowResultCard(false)
+    setAnsweredCorrectly(false)
+    setFirstCardAnswer(false)
+    await getCard();
+    } else {
+    setShowResultCard(false)
+    setGame(false)
+    const res = await gameFinished({variables: {score,wolf,sheep}})
+    console.log(res)
+    }
+  };
+
+  const gameFinishedHandler = async () => {
+    setSheep(0)
+    setWolf(0)
+    setScore(0)
+    setLives(3)
+    setShowFirstCard(false)
+    setShowSecondCard(false)
+    setFirstCardAnswer(false)
+    setAnsweredCorrectly(false)
+    setShowPlayCard(true)
+  }
+
+
   if (reportLoading) return null
   if (reportError) return <p>{reportError.message}</p>
 
-  if (userScoreLoading) return null
-  if (userScoreError) return <p>{userScoreError.message}</p>
+  if (gameFinishedLoading) return null
+  if (gameFinishedError) return <p>{gameFinishedError.message}</p>
 
   if (cardLoading) return null
   if (cardError) return <p>{cardError.message}</p>
@@ -162,8 +267,7 @@ const Play: React.FC = () => {
   if (cardAnswerLoading) return null
   if (cardAnswerError) return <p>{cardAnswerError.message}</p>
 
-
-  if (!cardData) {
+  if (showPlayCard) {
     return (
       <div className="flex">
         <ToastContainer
@@ -190,6 +294,7 @@ const Play: React.FC = () => {
     );
   }
 
+
   return (
     <>
       <ToastContainer
@@ -204,62 +309,121 @@ const Play: React.FC = () => {
         pauseOnHover
       />
       <div className="playCard">
-        <div className="p-4 mb-10 text-3xl md:text-5xl text-center pink rounded-md">
-          <h1 className="whitespace-nowrap">Your score: </h1>
-          <h1>{userData.getUser.score}</h1>
-        </div>
-        {!answered && (
+        {!game && 
+      <div>
+        <h1 className="text-5xl text-center text-black">
+          YOU LOST
+        </h1>
+          <div className="whitespace-nowrap inline-block m-auto md:m-2">
+            <h1 className="inline">{sheep}</h1>
+            <img src={require('../styles/assets/sheep.png')} alt="sheep" className="inline mx-4 h-10 md:h-20 lg:h-32"/>
+            <h1 className="inline">{wolf}</h1>
+            <img src={require('../styles/assets/wolf.png')} alt="wolf" className="inline mx-4 h-10 md:h-20 lg:h-32"/>
+          </div>
+          <h1>
+              Your game score: {score}
+          </h1>
+        <button onClick={gameFinishedHandler} className="accountBtn">
+          END
+        </button>
+      </div>
+      }
+        { showFirstCard &&
           <>
+            <h1 className="text-4xl text-center">
+              In your opinion?
+            </h1>
+      <div className="card my-4">
+        <p className="text-5xl text-center">{cardData.getRandomCard.title}</p>
+        <p className="text-3xl my-5">{cardData.getRandomCard.text}</p>
+      </div>
+        <div className="flex flex-row gap-4">
+          <button className="accountBtn flex-1" onClick={() => {firstCardHandler(true)}}>True</button>
+          <button className="accountBtn flex-1" onClick={() => {firstCardHandler(false)}}>False</button>
+        </div>
+  </>
+        }
+        {showSecondCard && (
+          <>
+            <h1 className="text-4xl text-center">What do other people think?</h1>
+        <div className="flex flex-col md:flex-row  items-center p-2 text-3xl md:text-5xl rounded-md">
 
-            <div className="mb-10 card">
-              <div className="flex flex-row">
+          <div className="whitespace-nowrap inline-block md:m-2 basis-1/3">
+            <h1 className="inline">{sheep}</h1>
+            <img src={require('../styles/assets/sheep.png')} alt="sheep" className="inline mx-4 h-10 md:h-20 lg:h-32"/>
+            <h1 className="inline">{wolf}</h1>
+            <img src={require('../styles/assets/wolf.png')} alt="wolf" className="inline mx-4 h-10 md:h-20 lg:h-32"/>
+          </div>
+
+          <div className="text-center md:m-8 inline-block basis-1/3">
+            <h1 className="whitespace-nowrap my-4 mx-10">SCORE</h1>
+            <h1>{score}</h1>
+          </div>
+
+          <div className="whitespace-nowrap md:m-2 basis-1/3 flex flex-row-reverse">
+              { [...Array(lives)].map((_, i:number) => <img src={require('../styles/assets/heart.png')} key={i} alt="wolf" className="inline h-10 m-2 md:h-20 lg:h-32 "/>)}
+          </div>
+        </div>
+
+            <div className="card">
+              <div className="flex flex-row flex-wrap">
                 <button
-                  className="self-center p-2 text-xl border-2 border-black rounded-lg basis-1/6 hover:bg-pink-300 inline md:block"
+                  className="self-center p-2 m-auto md:m-0 md:text-xl border-2 border-black rounded-lg basis-1/6 hover:bg-pink-300 inline md:block"
                   onClick={reportCardHandler}
                 >
                   Report 
                 </button>
-                <h1 className="accountCardTitle basis-4/6 whitespace-nowrap inline md:block">
+                <h1 className="accountCardTitle basis-4/6 whitespace-nowrap inline md:block m-auto md:m-0 my-4">
                   {cardData.getRandomCard.title.charAt(0).toUpperCase() +
                     cardData.getRandomCard.title.slice(1)}
                 </h1>
-                <p className="self-center text-xl basis-1/6 whitespace-nowrap inline md:block">
+                <p className="self-center text-xl md:text-2xl basis-1/6 whitespace-nowrap inline md:block m-auto md:m-0">
                   By {cardData.getRandomCard.author}
                 </p>
               </div>
-              <div className="self-center text-center">
-                <p className="mt-16 text-3xl">
+              <div className="self-center">
+                <p className="mt-4 md:mt-8 lg:mt-16 md:text-3xl">
                   {cardData.getRandomCard.text.charAt(0).toUpperCase() +
                     cardData.getRandomCard.text.slice(1)}
                 </p>
               </div>
             </div>
 
-            <div className="flex gap-2 h-1/8">
+            <div className="flex gap-2 h-1/8 mt-4">
               <button
                 className="w-9/12 mr-2 accountBtn"
-                onClick={() => answerHandler(true)}
+                onClick={() => secondCardHandler(true)}
               >
                 <h1 className="text-2xl">True</h1>
               </button>
               <button
                 className="w-9/12 accountBtn"
-                onClick={() => answerHandler(false)}
+                onClick={() => secondCardHandler(false)}
               >
                 <h1 className="text-2xl">False</h1>
               </button>
             </div>
           </>
         )}
-        {answered && (
+        {showResultCard && (
           <>
             {answeredCorrectly && (
-              <h1 className="text-center text-green-500 text-7xl ">
+            <>
+              <h1 className="text-center text-green-500 text-2xl md:text-3xl lg:text-5xl">
                 Correct!
               </h1>
+              <h1 className="text-center text-2xl mt-3">
+                Your answer: {secondCardAnswer.toString()}
+              </h1>
+            </>
             )}
             {!answeredCorrectly && (
-              <h1 className="text-center text-red-500 text-7xl ">Wrong!</h1>
+            <>
+              <h1 className="text-center text-red-500 text-3xl md:text-4xl lg:text-6xl">Wrong!</h1>
+              <h1 className="text-center text-2xl mt-3">
+                Your answer: {secondCardAnswer.toString()}
+              </h1>
+            </>
             )}
             <div className="self-center w-1/3 m-5 h-1/3">
 
@@ -278,14 +442,14 @@ const Play: React.FC = () => {
 
             </div>
             <div className="flex flex-row text-center gap-4">
-              <h1 className="flex-1 text-5xl text-center text-black">
-                True answers: {cardAnswerData.addCardAnswer.true}
+              <h1 className="flex-1 text-2xl md:text-3xl lg:text-5xl text-center text-black">
+                True answers: {Math.round(100*(cardData.getRandomCard.true/(cardData.getRandomCard.true + cardData.getRandomCard.false)))}%
               </h1>
-              <h1 className="flex-1 text-5xl text-center text-black">
-                False answers: {cardAnswerData.addCardAnswer.false}
+              <h1 className="flex-1 text-2xl md:text-3xl lg:text-5xl text-center text-black">
+                False answers: {Math.round(100*(cardData.getRandomCard.false/(cardData.getRandomCard.true + cardData.getRandomCard.false)))}%
               </h1>
             </div>
-            <button className="my-10 accountBtn" onClick={nextCardHandler}>
+            <button className="my-2 md:my-8 accountBtn" onClick={nextCardHandler}>
               Next
             </button>
           </>

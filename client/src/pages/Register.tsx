@@ -32,7 +32,7 @@ const Register: React.FC = () => {
       console.log(res)
       setTimeout(() => {
         setSession(true)
-        navigate("/profile");
+        navigate("/play");
       }, 2000);
     } catch (e: any) {
       newToast("error", e.message, 2000);

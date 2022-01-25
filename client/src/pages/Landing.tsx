@@ -28,7 +28,7 @@ const Landing: React.FC = () => {
         </div>
         <img className="flex-1 rounded-r-2xl" src={require('../styles/assets/bruce-mars-AndE50aaHn4-unsplash.jpg')} alt="test" />
       </div>
-      <Link to="/play" className="flex self-center w-1/2 p-2 mb-20 text-white bg-black rounded-md pinkHover hover:text-black">
+      <Link to="/register" className="flex self-center w-1/2 p-2 mb-20 text-white bg-black rounded-md pinkHover hover:text-black">
         <h1 className="m-auto text-8xl">PLAY</h1>
       </Link>
     </div>

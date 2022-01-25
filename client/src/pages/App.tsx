@@ -7,7 +7,6 @@ import Register from "./Register";
 import LeaderBoard from "./LeaderBoard";
 import {ProtectedRoute} from '../utils/auth'
 import NotFound from "./NotFound";
-import ModifyCard from "./ModifyCard";
 import Landing from "./Landing";
 import Play from "./Play";
 import ViewCard from "./ViewCard";
@@ -21,7 +20,13 @@ query Query {
 `
 
 const App = () => {
+  const tennis = 'haha'
+
   const [session, setSession] = useState(false)
+  
+  const poulet = () => {
+    
+  } 
 
   useEffect(() => {
     fetch('http://localhost:4000/graphql', {
@@ -46,7 +51,6 @@ const App = () => {
           <Route element={<ProtectedRoute />}>
             <Route path="/createcard" element={<CreateCard />} />
             <Route path="/viewcard" element={<ViewCard />} />
-            <Route path="/modifycard" element={<ModifyCard />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/play" element={<Play />} />
             <Route path="/leaderboard" element={<LeaderBoard />} />

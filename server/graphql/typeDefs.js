@@ -9,20 +9,20 @@ const typeDefs = buildSchema(`
     getRandomCard: Card!
     getLeaderBoard: [User!]!
     getUserCards: [Card!]!
+    getUserRanking: Int!
   }
 
   type Mutation {
     registerUser(name: String!, email: String!, password: String!): Boolean!
     loginUser(email: String!, password: String!): Boolean!
     logoutUser: Boolean!
-    addUserScore: User!
+    gameFinished(score: Int!, wolf: Int!, sheep: Int!): User!
     addCardReport(id: ID!): Card!
     createCard(
       title: String!
       text: String!
       answer: Boolean!
     ): Card!
-    modifyCard(id:ID!, title:String!, text:String!, answer:Boolean!):Card!
     deleteCard(id:ID!):Card!
     addCardAnswer(id:ID!,bool:Boolean!): Card! 
   }
@@ -33,18 +33,24 @@ const typeDefs = buildSchema(`
     name: String!
     email: String!
     password: String!
-    score: Int!
+    highScore: Int!
+    wolf: Int!
+    sheep: Int!
+    created_at: String! 
+    updated_at: String! 
   }
 
   type Card {
+    _id: ID!
     id: ID!
-    report: Int!
     title: String!
     text: String!
-    answer: Boolean!
     author: String!
     true: Int!
     false: Int!
+    report: Int!
+    created_at: String! 
+    updated_at: String! 
   }
 `);
 

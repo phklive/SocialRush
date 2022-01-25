@@ -101,7 +101,7 @@ const CreateCard: React.FC = () => {
             <p className="formError">{formik.errors.text}</p>
           ) : null}
           <label htmlFor="answer" className="formLabel">
-            Answer
+           Your answer
           </label>
           <select
             className="formInput"

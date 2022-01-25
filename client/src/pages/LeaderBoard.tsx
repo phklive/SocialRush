@@ -11,7 +11,9 @@ query Query {
   getLeaderBoard {
     id
     name
-    score
+    highScore
+    wolf
+    sheep
   }
 }
 `
@@ -34,8 +36,10 @@ const LeaderBoard: React.FC = () => {
               return (
                 <LeaderUser
                   name={user.name}
-                  score={user.score}
+                  score={user.highScore}
                   rank={i}
+                  wolf={user.wolf}
+                  sheep={user.sheep}
                   key={i}
                 />
               );

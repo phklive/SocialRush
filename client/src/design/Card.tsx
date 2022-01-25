@@ -2,7 +2,7 @@ import React, {useState} from "react";
 import "../styles/index.css";
 import {useNavigate} from 'react-router-dom'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
-import {faEdit, faTrashAlt, faEye} from '@fortawesome/free-solid-svg-icons'
+import { faTrashAlt, faEye} from '@fortawesome/free-solid-svg-icons'
 import {gql, useMutation} from "@apollo/client";
 import {newToast} from "../utils/toast";
 import {MYCARDS_QUERY} from "../pages/MyCards";
@@ -20,13 +20,12 @@ interface CardProps {
   id: string
   title: string
   text: string
-  answer: boolean
   T: number
   F: number
 }
 
 
-const Card: React.FC<CardProps> = ({id, title, text, answer, T, F}) => {
+const Card: React.FC<CardProps> = ({id, title, text,  T, F}) => {
   const navigate = useNavigate()
   const [modal, setModal] = useState(false)
   const [deleteCard] = useMutation(DELETE_CARD_MUTATION, {refetchQueries: [MYCARDS_QUERY, USER_AND_CARDS_QUERY]})
@@ -60,12 +59,8 @@ const Card: React.FC<CardProps> = ({id, title, text, answer, T, F}) => {
             {title}
           </h1>
           <button className="mr-2 text-xl text-white bg-black basis-2/6 rounded-md pinkHover"
-            onClick={() => {navigate('/viewcard', {state: {id, title, text, answer, T, F}})}}>
+            onClick={() => {navigate('/viewcard', {state: {id, title, text, T, F}})}}>
             View <FontAwesomeIcon icon={faEye}></FontAwesomeIcon>
-          </button>
-          <button className="mr-2 text-xl text-white bg-black basis-2/6 rounded-md pinkHover"
-            onClick={() => {navigate('/modifycard', {state: {id, title, text, answer}})}}>
-            Edit <FontAwesomeIcon icon={faEdit}></FontAwesomeIcon>
           </button>
           <button className="mr-2 text-xl text-white bg-black basis-2/6 rounded-md pinkHover"
             onClick={modalHandler}>
