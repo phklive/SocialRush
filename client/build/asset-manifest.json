@@ -1,0 +1,28 @@
+{
+  "files": {
+    "main.css": "/static/css/main.38ed6e9c.css",
+    "main.js": "/static/js/main.33b39390.js",
+    "static/media/people.png": "/static/media/people.a1210b1dfb3628e090ab.png",
+    "static/media/bgg.png": "/static/media/bgg.6218d9f9e0108ef9077b.png",
+    "static/media/takaya_1920.webp": "/static/media/takaya_1920.5602bc31dedae81cab19.webp",
+    "static/media/opinion.png": "/static/media/opinion.bd033e35e87507d21dd4.png",
+    "static/media/leader.png": "/static/media/leader.6ffbf8f7f73e22758989.png",
+    "static/media/result.png": "/static/media/result.15963bffc879a1f9314a.png",
+    "static/media/sheep-pack-flock-animals-flock-of-sheep-cattle-pasture-rural-winter.jpeg": "/static/media/sheep-pack-flock-animals-flock-of-sheep-cattle-pasture-rural-winter.2ab58aa68461b5cc6d26.jpeg",
+    "static/media/medal.png": "/static/media/medal.46f2243bedae5599a81b.png",
+    "static/media/profile.png": "/static/media/profile.140e172e729028f6fe66.png",
+    "static/media/wolf.png": "/static/media/wolf.d73c1db89422e6da5f53.png",
+    "static/media/create.png": "/static/media/create.7471668d2250b2d9c715.png",
+    "static/media/question.png": "/static/media/question.396e487d2a95ecbfdba7.png",
+    "static/media/sheep.png": "/static/media/sheep.57a600727e9e6ff903ba.png",
+    "static/media/broken-heart.png": "/static/media/broken-heart.d3ff12cba023fccd2cae.png",
+    "static/media/heart.png": "/static/media/heart.552c3e1b5574d71fea85.png",
+    "index.html": "/index.html",
+    "main.38ed6e9c.css.map": "/static/css/main.38ed6e9c.css.map",
+    "main.33b39390.js.map": "/static/js/main.33b39390.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.38ed6e9c.css",
+    "static/js/main.33b39390.js"
+  ]
+}

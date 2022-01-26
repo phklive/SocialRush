@@ -34,14 +34,14 @@ app.use(
       maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
     },
     store: MongoStore.create({
-      mongoUrl: process.env.DB || "mongodb://127.0.0.1:27017/trueorfalse",
+      mongoUrl: process.env.DB,
     }),
   })
 );
 
 app.use(
   cors({
-    origin: process.env.ORIGIN || "http://localhost:3000",
+    origin: process.env.ORIGIN,
     credentials: true,
   })
 );
@@ -55,9 +55,7 @@ app.use(
   }))
 );
 
-app.listen(process.env.PORT || 4000);
+app.listen(process.env.PORT);
 console.log(
-  `Running a GraphQL API server at http://localhost:${
-    process.env.PORT || 4000
-  }/graphql`
+  "Running graphql server at https://trueorfalseapp.herokuapp.com/graphql"
 );
