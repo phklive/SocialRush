@@ -26,9 +26,8 @@ const Register: React.FC = () => {
     password: string
   ) => {
     try {
-      const res = await register({ variables: { name, email, password } });
+      await register({ variables: { name, email, password } });
       newToast("success", "Account successfully created!", 2000);
-      console.log(res);
       setTimeout(() => {
         setSession(true);
         navigate("/play");

@@ -19,6 +19,8 @@ const app = express();
 
 connectToDB();
 
+app.set("trust proxy", 1);
+
 app.use(helmet());
 
 app.use(
@@ -29,7 +31,7 @@ app.use(
     saveUninitialized: false,
     cookie: {
       httpOnly: true,
-      sameSite: true,
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
       secure: process.env.NODE_ENV === "production",
       maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
     },
@@ -41,7 +43,7 @@ app.use(
 
 app.use(
   cors({
-    origin: process.env.ORIGIN,
+    origin: [process.env.ORIGIN],
     credentials: true,
   })
 );
@@ -51,7 +53,6 @@ app.use(
   graphqlHTTP((req) => ({
     schema,
     context: { req },
-    graphiql: true,
   }))
 );
 

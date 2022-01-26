@@ -33,7 +33,7 @@ const MyCards: React.FC = () => {
     setEnd((oldState) => oldState + 3);
   };
 
-  if (loading) return <p>loading...</p>;
+  if (loading) return null;
   if (error) return <p>{error.message}</p>;
 
   return (

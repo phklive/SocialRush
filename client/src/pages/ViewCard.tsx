@@ -93,7 +93,7 @@ const ViewCard: React.FC = () => {
   }
 
   return (
-    <div className="playCard text-center w-11/12 md:w-1/2 p-2">
+    <div className="shadow playCard text-center w-11/12 md:w-1/2 p-2">
       <FontAwesomeIcon
         icon={faArrowLeft}
         className="text-2xl mb-4 cursor-pointer backHover"

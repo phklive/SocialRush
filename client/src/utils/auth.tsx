@@ -10,7 +10,7 @@ export const ProtectedRoute: React.FC = () => {
   const [isAuth, setIsAuth] = useState(true);
 
   useEffect(() => {
-    fetch("https://trueorfalseapp.herokuapp.com/", {
+    fetch("https://trueorfalseapp.herokuapp.com/graphql", {
       method: "POST",
       credentials: "include",
       headers: {

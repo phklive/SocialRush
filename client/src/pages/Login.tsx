@@ -21,9 +21,8 @@ const Login: React.FC = () => {
 
   const loginHandler = async (email: string, password: string) => {
     try {
-      const res = await loginMutation({ variables: { email, password } });
+      await loginMutation({ variables: { email, password } });
       newToast("success", "Successfully logged in!", 2000);
-      console.log(res);
       setTimeout(() => {
         setSession(true);
         navigate("/play");

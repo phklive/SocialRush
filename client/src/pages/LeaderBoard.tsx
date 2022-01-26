@@ -36,9 +36,8 @@ const LeaderBoard: React.FC = () => {
     setEnd((oldState) => oldState + 5);
   };
 
-  if (loading) <p>loading...</p>;
-  if (error) <p>{error.message}</p>;
-  if (data) console.log(data.getLeaderBoard);
+  if (loading) return null;
+  if (error) return <p>{error.message}</p>;
 
   return (
     <div>

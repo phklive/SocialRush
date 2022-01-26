@@ -4,28 +4,24 @@ import { BrowserRouter } from "react-router-dom";
 import {
   ApolloClient,
   InMemoryCache,
-  createHttpLink,
   ApolloProvider,
+  HttpLink,
+  ApolloLink,
 } from "@apollo/client";
-import { setContext } from "@apollo/client/link/context";
 import "./styles/index.css";
 import App from "./pages/App";
 
-const httpLink = createHttpLink({
-  uri: "https://trueorfalseapp.herokuapp.com/",
-  credentials: "include",
-});
+const uri = "https://trueorfalseapp.herokuapp.com/graphql";
 
-const authLink = setContext((_, { headers }) => {
-  const token = localStorage.getItem("token");
-
-  return {
-    headers: {
-      ...headers,
-      authorization: token ? `Bearer ${token}` : "",
+const httpLink = ApolloLink.from([
+  new HttpLink({
+    fetchOptions: {
+      credentials: "include",
     },
-  };
-});
+    uri,
+    credentials: "include",
+  }),
+]);
 
 const cache = new InMemoryCache({
   typePolicies: {
@@ -36,7 +32,7 @@ const cache = new InMemoryCache({
 });
 
 const client = new ApolloClient({
-  link: authLink.concat(httpLink),
+  link: httpLink,
   cache,
 });
 

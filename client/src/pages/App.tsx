@@ -23,7 +23,7 @@ const App = () => {
   const [session, setSession] = useState(false);
 
   useEffect(() => {
-    fetch("https://trueorfalseapp.herokuapp.com/", {
+    fetch("https://trueorfalseapp.herokuapp.com/graphql", {
       method: "POST",
       credentials: "include",
       headers: {

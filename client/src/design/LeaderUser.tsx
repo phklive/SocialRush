@@ -42,9 +42,9 @@ const LeaderUser: React.FC<LeaderUserProps> = ({
     }
   );
 
-  if (loading) return <p>loading...</p>;
+  if (loading) return null;
   if (error) return <p>{error.message}</p>;
-  if (rankingLoading) return <p>loading...</p>;
+  if (rankingLoading) return null;
 
   return (
     <div
