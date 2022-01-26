@@ -1,6 +1,7 @@
 TODO:
 - Put the website in french
 - Deploy app
+ok!
 
 IDEAS: 
 - give different card before question so people cannot skip report cards they don't know
