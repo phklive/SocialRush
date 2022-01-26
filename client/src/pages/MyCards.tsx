@@ -1,5 +1,5 @@
-import {gql, useQuery} from "@apollo/client";
-import React, {useState} from "react";
+import { gql, useQuery } from "@apollo/client";
+import React, { useState } from "react";
 import Card from "../design/Card";
 import "../styles/index.css";
 
@@ -16,7 +16,7 @@ export const MYCARDS_QUERY = gql`
 `;
 
 const MyCards: React.FC = () => {
-  const {loading, error, data} = useQuery(MYCARDS_QUERY, {
+  const { loading, error, data } = useQuery(MYCARDS_QUERY, {
     fetchPolicy: "no-cache",
   });
 
@@ -51,14 +51,14 @@ const MyCards: React.FC = () => {
       <div className="flex flex-row mt-5 gap-4">
         <button
           disabled={start === 0}
-          className="flex-1 m-2 accountBtn"
+          className="flex-1 m-2 accountBtn text-lg md:text-2xl"
           onClick={handlePrevious}
         >
           Previous
         </button>
         <button
           disabled={end >= data.getUserCards.length}
-          className="flex-1 m-2 accountBtn"
+          className="flex-1 m-2 text-lg md:text-2xl accountBtn"
           onClick={handleNext}
         >
           Next

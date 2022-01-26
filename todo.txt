@@ -1,10 +1,10 @@
-- Re-work langing page -> Explain game / how to play ?? add how to play page ?
-- Final touches icons ect...
+TODO:
 - Put the website in french
-- Make the website responsive and playable on phones
 - Deploy app
-- receive right error.message on frontend
-- don't change card , just change inner info from second to result card
-- change app font 
-- change app name
-- buy app domain name
+
+IDEAS: 
+- give different card before question so people cannot skip report cards they don't know
+- limit number of reports / card creation -> time/number
+
+ADDITIONAL:
+- get feedback 

@@ -1,23 +1,22 @@
 import React from "react";
-import {gql, useMutation} from "@apollo/client";
-import {useNavigate} from "react-router";
-import {Link} from "react-router-dom";
+import { gql, useMutation } from "@apollo/client";
+import { useNavigate } from "react-router";
+import { Link } from "react-router-dom";
 import * as Yup from "yup";
-import {useFormik} from "formik";
-import {newToast} from "../utils/toast";
-import {ToastContainer} from "react-toastify";
-import {AuthContext} from "./AuhthContext";
-import {useContext} from "react";
-
+import { useFormik } from "formik";
+import { newToast } from "../utils/toast";
+import { ToastContainer } from "react-toastify";
+import { AuthContext } from "./AuhthContext";
+import { useContext } from "react";
 
 const REGISTER_QUERY = gql`
-mutation Mutation($name: String!, $email: String!, $password: String!) {
-  registerUser(name: $name, email: $email, password: $password)
-}
+  mutation Mutation($name: String!, $email: String!, $password: String!) {
+    registerUser(name: $name, email: $email, password: $password)
+  }
 `;
 
 const Register: React.FC = () => {
-  const {setSession} = useContext(AuthContext)
+  const { setSession } = useContext(AuthContext);
   const navigate = useNavigate();
   const [register] = useMutation(REGISTER_QUERY);
 
@@ -27,11 +26,11 @@ const Register: React.FC = () => {
     password: string
   ) => {
     try {
-      const res = await register({variables: {name, email, password}});
+      const res = await register({ variables: { name, email, password } });
       newToast("success", "Account successfully created!", 2000);
-      console.log(res)
+      console.log(res);
       setTimeout(() => {
-        setSession(true)
+        setSession(true);
         navigate("/play");
       }, 2000);
     } catch (e: any) {
@@ -48,7 +47,7 @@ const Register: React.FC = () => {
     validationSchema: Yup.object({
       name: Yup.string()
         .min(3, "Name can't be too short.")
-        .max(20, "Name can't be too long.")
+        .max(15, "Name can't be too long.")
         .required("Name is required."),
       email: Yup.string().required("Email is required."),
       password: Yup.string().required("Password is required."),
@@ -61,7 +60,6 @@ const Register: React.FC = () => {
   return (
     <>
       <ToastContainer
-        style={{width: "500px"}}
         position="top-center"
         autoClose={5000}
         hideProgressBar={false}
@@ -70,13 +68,17 @@ const Register: React.FC = () => {
         rtl={false}
         pauseOnFocusLoss
         draggable
-        pauseOnHover />
+        pauseOnHover
+      />
 
-      <div className="accountCard">
-        <div className="innerAccountCard">
+      <div className="shadow playCard w-11/12 md:w-1/3 p-2">
+        <div className="">
           <h1 className="accountCardTitle">Welcome player</h1>
           <p className="accountCardSubTitle">Welcome to True or False!</p>
-          <form className="flex flex-col" onSubmit={formik.handleSubmit}>
+          <form
+            className="flex flex-col p-2 md:px-20 md:py-10"
+            onSubmit={formik.handleSubmit}
+          >
             <label htmlFor="name" className="formLabel">
               Name
             </label>
@@ -86,7 +88,7 @@ const Register: React.FC = () => {
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               value={formik.values.name}
-              placeholder="Enter your name"
+              placeholder="Enter your username"
               className="formInput"
             />
             {formik.errors.name && formik.touched.name ? (
@@ -123,15 +125,19 @@ const Register: React.FC = () => {
             {formik.errors.password && formik.touched.password ? (
               <p className="formError">{formik.errors.password}</p>
             ) : null}
-            <div
-              className="my-4"
-            >
-              <span className="text-xl text-slate-400">
+            <div className="my-4">
+              <span className="text-lg md:text-xl text-slate-400">
                 Already have an account?
               </span>
-              <Link to="/login" className="text-xl hover:text-blue-800"> Sign in.</Link>
+              <Link
+                to="/login"
+                className="text-lg md:text-xl hover:text-blue-800"
+              >
+                {" "}
+                Sign in.
+              </Link>
             </div>
-            <button type="submit" className="accountBtn">
+            <button type="submit" className="accountBtn text-xl md:text-3xl">
               Sign up
             </button>
           </form>

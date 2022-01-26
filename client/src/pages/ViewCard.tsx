@@ -7,9 +7,7 @@ import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-interface ViewCardProps {}
-
-const ViewCard: React.FC<ViewCardProps> = ({}) => {
+const ViewCard: React.FC = () => {
   const navigate = useNavigate();
   const { state }: any = useLocation();
   const [showData, setShowData] = useState(false);
@@ -37,7 +35,7 @@ const ViewCard: React.FC<ViewCardProps> = ({}) => {
 
   if (showData) {
     return (
-      <div className="playCard w-11/12 md:w-1/2">
+      <div className="playCard shadow w-11/12 md:w-1/2 p-2">
         <FontAwesomeIcon
           icon={faArrowLeft}
           className="text-2xl mb-4 cursor-pointer backHover"
@@ -46,7 +44,7 @@ const ViewCard: React.FC<ViewCardProps> = ({}) => {
           }}
         />
         <div className="card">
-          <h1 className="accountCardTitle">{state.title}</h1>
+          <h1 className="accountCardTitle m-4">{state.title}</h1>
           <div className="m-auto w-1/3 h-1/3">
             <Doughnut
               data={chartDataset}
@@ -62,19 +60,20 @@ const ViewCard: React.FC<ViewCardProps> = ({}) => {
             />
           </div>
           <div className="flex flex-row text-center gap-4 mt-6">
-            <h1 className="flex-1 text-2xl md:text-3xl lg:text-5xl text-center text-black">
-              True answers: {Math.round(100 * (state.T / (state.T + state.F)))}%
+            <h1 className="flex-1 text-xl md:text-2xl  text-center text-black">
+              <span className="whitespace-nowrap block">True answers:</span>
+              {Math.round(100 * (state.T / (state.T + state.F)))}%
             </h1>
-            <h1 className="flex-1 text-2xl md:text-3xl lg:text-5xl text-center text-black">
-              False answers: {Math.round(100 * (state.F / (state.T + state.F)))}
-              %
+            <h1 className="flex-1 text-xl md:text-2xl  text-center text-black">
+              <span className="whitespace-nowrap block">False answers:</span>
+              {Math.round(100 * (state.F / (state.T + state.F)))}%
             </h1>
           </div>
         </div>
         <div className="flex flex-row gap-10">
           <button
             onClick={showCardPageHandler}
-            className="flex-1 p-4 my-4 text-2xl text-white bg-black rounded-md"
+            className="flex-1 p-4 my-4 text-xl md:text-2xl text-white bg-black rounded-md"
           >
             Show card info
           </button>
@@ -82,8 +81,8 @@ const ViewCard: React.FC<ViewCardProps> = ({}) => {
             onClick={showDataPageHandler}
             className={
               showData
-                ? "flex-1 pink text-black text-2xl rounded-md p-4 my-4"
-                : "flex-1 text-white bg-black text-2xl rounded-md p-4 my-4"
+                ? "flex-1 pink text-black text-xl md:text-2xl rounded-md p-4 my-4"
+                : "flex-1 text-white bg-black text-xl md:text-2xl rounded-md p-4 my-4"
             }
           >
             Show card data
@@ -94,7 +93,7 @@ const ViewCard: React.FC<ViewCardProps> = ({}) => {
   }
 
   return (
-    <div className="playCard text-center w-11/12 md:w-1/2">
+    <div className="playCard text-center w-11/12 md:w-1/2 p-2">
       <FontAwesomeIcon
         icon={faArrowLeft}
         className="text-2xl mb-4 cursor-pointer backHover"
@@ -104,22 +103,22 @@ const ViewCard: React.FC<ViewCardProps> = ({}) => {
       />
       <div className="card">
         <h1 className="accountCardTitle">{state.title}</h1>
-        <p className="my-16 text-3xl">{state.text}</p>
+        <p className="my-16 text-lg md:text-xl">{state.text}</p>
       </div>
       <div className="flex flex-row gap-10">
         <button
           onClick={showCardPageHandler}
           className={
             !showData
-              ? "flex-1 pink text-black text-2xl rounded-md p-4 my-4"
-              : "flex-1 text-white bg-black text-2xl rounded-md p-4 my-4"
+              ? "flex-1 pink text-black text-xl md:text-2xl rounded-md p-4 my-4"
+              : "flex-1 text-white bg-black text-xl md:text-2xl rounded-md p-4 my-4"
           }
         >
           Show card info
         </button>
         <button
           onClick={showDataPageHandler}
-          className="flex-1 p-4 my-4 text-2xl text-white bg-black rounded-md"
+          className="flex-1 p-4 my-4 text-xl md:text-2xl text-white bg-black rounded-md"
         >
           Show card data
         </button>

@@ -29,7 +29,7 @@ const Login: React.FC = () => {
         navigate("/play");
       }, 2000);
     } catch (e: any) {
-      newToast("error", e.message, 2000);
+      newToast("error", "Credentials are incorrect...", 2000);
     }
   };
 
@@ -50,7 +50,6 @@ const Login: React.FC = () => {
   return (
     <>
       <ToastContainer
-        style={{ width: "500px" }}
         position="top-center"
         autoClose={5000}
         hideProgressBar={false}
@@ -61,13 +60,14 @@ const Login: React.FC = () => {
         draggable
         pauseOnHover
       />
-      <div className="playCard w-5/6 md:w-1/2">
+      <div className="playCard w-11/12 md:w-1/3 shadow p-2">
         <div className="innerAccountCard">
           <h1 className="accountCardTitle">Welcome back</h1>
-          <p className="accountCardSubTitle">
-            Welcome back! Please enter your details.
-          </p>
-          <form className="flex flex-col" onSubmit={formik.handleSubmit}>
+          <p className="accountCardSubTitle">Please enter your details.</p>
+          <form
+            className="flex flex-col p-2 md:px-20 md:py-10"
+            onSubmit={formik.handleSubmit}
+          >
             <label htmlFor="email" className="formLabel">
               Email
             </label>
@@ -99,15 +99,18 @@ const Login: React.FC = () => {
               <p className="formError">{formik.errors.password}</p>
             ) : null}
             <div className="my-4">
-              <span className="text-xl text-slate-400">
+              <span className="text-lg md:text-xl text-slate-400">
                 Don't have an account?
               </span>
-              <Link className="text-xl hover:text-blue-800" to="/register">
+              <Link
+                className="text-lg md:text-xl hover:text-blue-800"
+                to="/register"
+              >
                 {" "}
                 Sign up!
               </Link>
             </div>
-            <button type="submit" className="accountBtn">
+            <button type="submit" className="accountBtn text-xl md:text-3xl">
               Sign in
             </button>
           </form>

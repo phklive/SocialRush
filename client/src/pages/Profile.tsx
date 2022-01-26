@@ -55,7 +55,6 @@ const Profile: React.FC = () => {
         exec={disconnectionHandler}
       />
       <ToastContainer
-        style={{ width: "600px" }}
         position="top-center"
         autoClose={5000}
         hideProgressBar={false}
@@ -66,10 +65,13 @@ const Profile: React.FC = () => {
         draggable
         pauseOnHover
       />
-      <div className="flex-col playCard w-11/12 md:w-1/2 p-2">
+      <div className="flex-col shadow playCard w-11/12 md:w-1/3 p-1">
         <ProfileInfo />
         <MyCards />
-        <button onClick={modalHandler} className="m-2 accountBtn">
+        <button
+          onClick={modalHandler}
+          className="text-xl md:text-2xl m-2 accountBtn"
+        >
           Disconnect
         </button>
       </div>

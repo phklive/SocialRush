@@ -5,17 +5,36 @@
 html {
   background-image: url("./assets/bgg.png");
   background-size: cover;
-  background-position: center center;
   height: 100vh;
   width: 100vw;
 }
 
+html,
+body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
 :root {
-  font-family: "Roboto", sans-serif;
+  font-family: "Poppins", sans-serif;
 }
 
 body {
   padding-bottom: 50px;
+}
+
+.whitebg {
+  background-color: rgb(000, 000, 000, 0.8);
+}
+
+.landingBox {
+  border-radius: 0px 50px 0px 50px;
+  border: 2px solid #000000;
+}
+
+.shadow {
+  -webkit-box-shadow: 0px 0px 25px 5px rgba(0, 0, 0, 0.3);
+  box-shadow: 0px 0px 25px 5px rgba(0, 0, 0, 0.3);
 }
 
 .pink {
@@ -45,7 +64,7 @@ body {
 }
 
 .playCard {
-  @apply drop-shadow-2xl m-auto flex flex-col  bg-white rounded-xl border-8 pinkBorder mt-20 p-4;
+  @apply m-auto flex flex-col  bg-white rounded-xl border-8 pinkBorder mt-20;
 }
 
 .accountCard {
@@ -53,15 +72,11 @@ body {
 }
 
 .accountCardTitle {
-  @apply text-xl md:text-4xl text-center;
+  @apply text-2xl md:text-4xl text-center;
 }
 
 .accountCardSubTitle {
   @apply text-slate-500 text-xl mb-4 text-center;
-}
-
-.innerAccountCard {
-  @apply h-1/2 w-3/5 m-auto;
 }
 
 .accountBtn {
@@ -81,16 +96,12 @@ body {
   @apply p-2 mt-4 text-3xl border-2 border-black rounded-lg hover:bg-pink-300;
 }
 
-.cardText {
-  @apply text-3xl self-center my-10;
-}
-
 .formInput {
-  @apply border-slate-400 border-4 rounded-md p-2 outline-none text-xl bg-white;
+  @apply border-slate-400 border-4 rounded-md p-2 outline-none text-lg  md:text-xl bg-white;
 }
 
 .formLabel {
-  @apply text-xl my-2;
+  @apply text-lg md:text-xl my-2;
 }
 
 .formError {
@@ -99,10 +110,6 @@ body {
 
 .toast {
   @apply text-2xl font-bold;
-}
-
-.active {
-  @apply underline;
 }
 
 .pinkBorder {

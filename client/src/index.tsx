@@ -1,24 +1,22 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import {Provider} from 'react-redux'
-import store from './redux/store'
-import {BrowserRouter} from "react-router-dom";
+import { BrowserRouter } from "react-router-dom";
 import {
   ApolloClient,
   InMemoryCache,
   createHttpLink,
   ApolloProvider,
 } from "@apollo/client";
-import {setContext} from "@apollo/client/link/context";
+import { setContext } from "@apollo/client/link/context";
 import "./styles/index.css";
 import App from "./pages/App";
 
 const httpLink = createHttpLink({
-  uri: 'http://localhost:4000/graphql',
-  credentials: 'include'
+  uri: "https://trueorfalseapp.herokuapp.com/",
+  credentials: "include",
 });
 
-const authLink = setContext((_, {headers}) => {
+const authLink = setContext((_, { headers }) => {
   const token = localStorage.getItem("token");
 
   return {
@@ -32,25 +30,23 @@ const authLink = setContext((_, {headers}) => {
 const cache = new InMemoryCache({
   typePolicies: {
     getUser: {
-      keyFields: ["id"]
+      keyFields: ["id"],
     },
   },
 });
 
 const client = new ApolloClient({
   link: authLink.concat(httpLink),
-  cache
+  cache,
 });
 
 ReactDOM.render(
   <BrowserRouter>
-    <Provider store={store}>
-      <ApolloProvider client={client}>
-        <React.StrictMode>
-          <App />
-        </React.StrictMode>
-      </ApolloProvider>
-    </Provider>
+    <ApolloProvider client={client}>
+      <React.StrictMode>
+        <App />
+      </React.StrictMode>
+    </ApolloProvider>
   </BrowserRouter>,
   document.getElementById("root")
 );

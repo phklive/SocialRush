@@ -1,4 +1,4 @@
-import {buildSchema} from "graphql";
+import { buildSchema } from "graphql";
 
 const typeDefs = buildSchema(`
   type Query {
@@ -9,7 +9,7 @@ const typeDefs = buildSchema(`
     getRandomCard: Card!
     getLeaderBoard: [User!]!
     getUserCards: [Card!]!
-    getUserRanking: Int!
+    getUserRanking(name: String!): Int!
   }
 
   type Mutation {

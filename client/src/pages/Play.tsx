@@ -6,6 +6,9 @@ import { newToast } from "../utils/toast";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Doughnut } from "react-chartjs-2";
 import { AuthContext } from "./AuhthContext";
+import { RANK_QUERY } from "./ProfileInfo";
+import { RANKING_QUERY } from "../design/LeaderUser";
+import { USERS_AND_LEADER_QUERY } from "./LeaderBoard";
 
 const USER_QUERY = gql`
   query GetUser {
@@ -226,7 +229,10 @@ const Play: React.FC = () => {
     } else {
       setShowResultCard(false);
       setGame(false);
-      await gameFinished({ variables: { score, wolf, sheep } });
+      await gameFinished({
+        variables: { score, wolf, sheep },
+        refetchQueries: [RANK_QUERY, RANKING_QUERY, USERS_AND_LEADER_QUERY],
+      });
     }
   };
 
@@ -256,25 +262,27 @@ const Play: React.FC = () => {
   };
 
   if (reportLoading) return null;
-  if (reportError) return <p>{reportError.message}</p>;
+  if (reportError)
+    return <p>There has been an error, please reload the page.</p>;
 
   if (gameFinishedLoading) return null;
-  if (gameFinishedError) return <p>{gameFinishedError.message}</p>;
+  if (gameFinishedError)
+    return <p>There has been an error, please reload the page.</p>;
 
   if (cardLoading) return null;
-  if (cardError) return <p>{cardError.message}</p>;
+  if (cardError) return <p>There has been an error, please reload the page.</p>;
 
   if (userLoading) return null;
-  if (userError) return <p>{userError.message}</p>;
+  if (userError) return <p>There has been an error, please reload the page.</p>;
 
   if (cardAnswerLoading) return null;
-  if (cardAnswerError) return <p>{cardAnswerError.message}</p>;
+  if (cardAnswerError)
+    return <p>There has been an error, please reload the page.</p>;
 
   if (showPlayCard) {
     return (
       <div className="flex">
         <ToastContainer
-          style={{ width: "450px" }}
           position="top-center"
           autoClose={5000}
           hideProgressBar={false}
@@ -286,7 +294,7 @@ const Play: React.FC = () => {
           pauseOnHover
         />
         <button
-          className=" shadow-2xl m-auto mt-40 w-11/12 h-96 pink rounded-xl hover:bg-pink-300 hover:font-bold"
+          className=" shadow m-auto mt-10 w-11/12 md:w-3/5 h-96 pink rounded-xl hover:bg-pink-300 hover:font-bold"
           onClick={() => {
             playHandler();
           }}
@@ -310,21 +318,23 @@ const Play: React.FC = () => {
         draggable
         pauseOnHover
       />
-      <div className="playCard w-11/12">
+      <div className="shadow playCard w-11/12 md:w-2/3 p-2">
         {!game && (
           <>
             <div>
               <h1 className="text-3xl md:text-4xl text-center text-black">
                 YOU LOST
               </h1>
-              <h1 className="text-xl text-center mb-2">Summary:</h1>
+              <h1 className="text-xl md:text-2xl text-center mb-2">Summary:</h1>
               <div className="card">
                 <div className="whitespace-nowrap md:m-2 flex flex-col">
                   {score > userData.getUser.highScore && (
-                    <h1 className="text-2xl text-center">NEW HIGH SCORE!</h1>
+                    <h1 className="text-2xl text-center">NEW HIGH SCORE!!!</h1>
                   )}
-                  <h1 className="text-xl text-center">Game score:</h1>
-                  <h1 className="text-center text-2xl">{score}</h1>
+                  <h1 className="text-xl md:text-2xl text-center">
+                    Game score:
+                  </h1>
+                  <h1 className="text-center text-xl md:text-2xl">{score}</h1>
                   <div className="flex flex-row self-center">
                     <div className="flex flex-col">
                       <img
@@ -332,7 +342,9 @@ const Play: React.FC = () => {
                         alt="sheep"
                         className="inline mx-4 h-12 md:h-20 lg:h-24"
                       />
-                      <h1 className="text-center">{sheep}</h1>
+                      <h1 className="text-center text-xl md:text-2xl">
+                        {sheep}
+                      </h1>
                     </div>
 
                     <div className="flex flex-col">
@@ -341,7 +353,9 @@ const Play: React.FC = () => {
                         alt="wolf"
                         className="inline mx-4 h-12 md:h-20 lg:h-24"
                       />
-                      <h1 className="text-center">{wolf}</h1>
+                      <h1 className="text-center text-xl md:text-2xl">
+                        {wolf}
+                      </h1>
                     </div>
                   </div>
                 </div>
@@ -369,16 +383,16 @@ const Play: React.FC = () => {
               In your opinion?
             </h1>
             <div className="card my-4 flex flex-col">
+              <p className="text-xl md:text-4xl text-center">
+                {cardData.getRandomCard.title}
+              </p>
               <button
-                className="self-center p-1 md:p-2 m-2 text-sm md:m-0 md:text-xl border-2 border-black rounded-lg hover:bg-pink-300"
+                className="self-center p-1 md:p-2 m-2 text-sm md:m-0 md:text-xl  hover:text-pink-300"
                 onClick={reportCardHandler}
               >
                 Report
               </button>
-              <p className="text-xl md:text-4xl text-center">
-                {cardData.getRandomCard.title}
-              </p>
-              <p className="text-l md:text-2xl my-5">
+              <p className="text-lg md:text-2xl my-5">
                 {cardData.getRandomCard.text}
               </p>
             </div>
@@ -446,12 +460,12 @@ const Play: React.FC = () => {
                   {cardData.getRandomCard.title.charAt(0).toUpperCase() +
                     cardData.getRandomCard.title.slice(1)}
                 </h1>
-                <p className="self-center text-l md:text-2xl basis-1/6 whitespace-nowrap m-auto">
+                <p className="self-center md:text-2xl basis-1/6 whitespace-nowrap m-auto">
                   By {cardData.getRandomCard.author}
                 </p>
               </div>
               <div className="self-center">
-                <p className="mt-4 md:mt-8 lg:mt-16 md:text-3xl">
+                <p className="mt-4 text-lg md:mt-8 lg:mt-16 md:text-3xl">
                   {cardData.getRandomCard.text.charAt(0).toUpperCase() +
                     cardData.getRandomCard.text.slice(1)}
                 </p>
@@ -513,7 +527,7 @@ const Play: React.FC = () => {
               </div>
               <div className="flex flex-row text-center gap-2 mt-6">
                 <h1 className="flex-1 text-xl md:text-3xl lg:text-5xl text-center text-black">
-                  True answers:{" "}
+                  <span className="whitespace-nowrap">True answers:</span>{" "}
                   {Math.round(
                     100 *
                       (cardData.getRandomCard.true /
@@ -523,7 +537,7 @@ const Play: React.FC = () => {
                   %
                 </h1>
                 <h1 className="flex-1 text-xl md:text-3xl lg:text-5xl text-center text-black">
-                  False answers:{" "}
+                  <span className="whitespace-nowrap">False answers:</span>{" "}
                   {Math.round(
                     100 *
                       (cardData.getRandomCard.false /
@@ -535,7 +549,7 @@ const Play: React.FC = () => {
               </div>
             </div>
             <button
-              className="my-2 md:my-8 text-xl md:text-3xl accountBtn"
+              className="mt-2 md:mt-8 text-xl md:text-3xl accountBtn"
               onClick={nextCardHandler}
             >
               Next

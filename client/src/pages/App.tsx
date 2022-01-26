@@ -20,14 +20,10 @@ query Query {
 `;
 
 const App = () => {
-  const tennis = "haha";
-
   const [session, setSession] = useState(false);
 
-  const poulet = () => {};
-
   useEffect(() => {
-    fetch("http://localhost:4000/graphql", {
+    fetch("https://trueorfalseapp.herokuapp.com/", {
       method: "POST",
       credentials: "include",
       headers: {

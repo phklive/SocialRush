@@ -1,9 +1,9 @@
 import express from "express";
-import {graphqlHTTP} from "express-graphql";
-import {makeExecutableSchema} from "@graphql-tools/schema";
+import { graphqlHTTP } from "express-graphql";
+import { makeExecutableSchema } from "@graphql-tools/schema";
 import connectToDB from "./database/db.js";
-import helmet from 'helmet'
-import cors from 'cors'
+import helmet from "helmet";
+import cors from "cors";
 import typeDefs from "./graphql/typeDefs.js";
 import resolvers from "./graphql/resolvers.js";
 import "dotenv/config";
@@ -12,14 +12,14 @@ import MongoStore from "connect-mongo";
 
 const schema = makeExecutableSchema({
   typeDefs,
-  resolvers
-})
+  resolvers,
+});
+
 const app = express();
-const port = process.env.PORT || 4000;
 
 connectToDB();
 
-app.use(helmet())
+app.use(helmet());
 
 app.use(
   session({
@@ -31,28 +31,33 @@ app.use(
       httpOnly: true,
       sameSite: true,
       secure: process.env.NODE_ENV === "production",
-      maxAge: 1000 * 60 * 60 * 24 * 7 // 7 days
+      maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
     },
     store: MongoStore.create({
-      mongoUrl: process.env.DB || 'mongodb+srv://phk:ZJqeilOJN88IjrQ1@trueorfalsedatabase.zjlxx.mongodb.net/trueorfalse?retryWrites=true&w=majority'
-    })
+      mongoUrl: process.env.DB || "mongodb://127.0.0.1:27017/trueorfalse",
+    }),
   })
 );
 
-app.use(cors({
-  origin: 'http://localhost:3000',
-  credentials: true
-}));
+app.use(
+  cors({
+    origin: process.env.ORIGIN || "http://localhost:3000",
+    credentials: true,
+  })
+);
 
 app.use(
   "/graphql",
-  graphqlHTTP(req => ({
+  graphqlHTTP((req) => ({
     schema,
-    context: {req},
-    graphiql: true
+    context: { req },
+    graphiql: true,
   }))
 );
 
-app.listen(port);
-console.log(`Running a GraphQL API server at http://localhost:${port}/graphql`);
-
+app.listen(process.env.PORT || 4000);
+console.log(
+  `Running a GraphQL API server at http://localhost:${
+    process.env.PORT || 4000
+  }/graphql`
+);

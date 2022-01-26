@@ -35,6 +35,7 @@ const CreateCard: React.FC = () => {
         .required("Title is required."),
       text: Yup.string()
         .min(30, "Text can't be too short")
+        .max(300, "Text can't be too long")
         .required("Text is required."),
       answer: Yup.boolean().required("Answer is required."),
     }),
@@ -55,7 +56,6 @@ const CreateCard: React.FC = () => {
   return (
     <>
       <ToastContainer
-        style={{ width: "500px" }}
         position="top-center"
         autoClose={5000}
         hideProgressBar={false}
@@ -66,7 +66,7 @@ const CreateCard: React.FC = () => {
         draggable
         pauseOnHover
       />
-      <div className="p-4 playCard w-11/12 md:w-1/2">
+      <div className="p-4 playCard w-11/12 md:w-1/3 shadow">
         <h1 className="accountCardTitle">Create your card</h1>
         <h1 className="accountCardSubTitle">
           Create your very own cards and see what other people think
@@ -95,7 +95,7 @@ const CreateCard: React.FC = () => {
           <textarea
             name="text"
             rows={6}
-            maxLength={500}
+            maxLength={300}
             className="resize-none formInput"
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
@@ -116,7 +116,7 @@ const CreateCard: React.FC = () => {
             <option value="true">True</option>
             <option value="false">False</option>
           </select>
-          <button type="submit" className="mt-5 accountBtn">
+          <button type="submit" className="mt-5 accountBtn text-xl md:text-3xl">
             Create card
           </button>
         </form>

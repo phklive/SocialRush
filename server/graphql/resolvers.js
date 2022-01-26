@@ -1,25 +1,24 @@
-import {User, Card} from "../database/schemas.js";
+import { User, Card } from "../database/schemas.js";
 import bcrypt from "bcryptjs";
-import {v4 as uuidv4} from 'uuid'
+import { v4 as uuidv4 } from "uuid";
 
 const resolvers = {
   Query: {
-    isAuth: async (_, args, {req}) => {
-
+    isAuth: async (_, args, { req }) => {
       if (!req.session.user) {
-        return false
+        return false;
       }
 
-      return true
+      return true;
     },
 
-    getUser: async (_, args, {req}) => {
-      if (!req.session.user) throw new Error('You are not authenticated!')
+    getUser: async (_, args, { req }) => {
+      if (!req.session.user) throw new Error("You are not authenticated!");
 
-      return await User.findOne({id: req.session.user.id})
+      return await User.findOne({ id: req.session.user.id });
     },
 
-    getUsers: async (_, args, {req}) => {
+    getUsers: async (_, args, { req }) => {
       return await User.find({});
     },
 
@@ -28,40 +27,48 @@ const resolvers = {
     },
 
     getRandomCard: async () => {
-      const card = await Card.aggregate([{$sample: {size: 1}}]);
+      const card = await Card.aggregate([{ $sample: { size: 1 } }]);
       return card[0];
     },
 
     getLeaderBoard: async () => {
-      return await User.find({}).sort({score: -1}).limit(10);
+      return await User.find({}).sort({ highScore: -1 });
     },
 
-    getUserCards: async (_, args, {req}) => {
-      if (!req.session.user) throw new Error('You are not authenticated!')
+    getUserCards: async (_, args, { req }) => {
+      if (!req.session.user) throw new Error("You are not authenticated!");
 
-      return await Card.find({author: req.session.user.name}).sort({_id: -1})
+      return await Card.find({ author: req.session.user.name }).sort({
+        _id: -1,
+      });
     },
 
-    getUserRanking: async (_, args, {req}) => {
-      if (!req.session.user) throw new Error('You are not authenticated!')
+    getUserRanking: async (_, { name }, { req }) => {
+      if (!req.session.user) throw new Error("You are not authenticated!");
 
-      const users = await User.find({}).sort({highScore: -1})
+      const users = await User.find({}).sort({ highScore: -1 });
 
-      const user = users.findIndex((user) => user.name === req.session.user.name) + 1 
-
-      return user
-    }
+      if (name === "none") {
+        const user = users.findIndex(
+          (user) => user.name === req.session.user.name
+        );
+        return user;
+      } else {
+        const user = users.findIndex((user) => user.name === name);
+        return user;
+      }
+    },
   },
 
   Mutation: {
-    registerUser: async (_, {name, email, password}, {req}) => {
-      const existingUser = await User.findOne({name});
+    registerUser: async (_, { name, email, password }, { req }) => {
+      const existingUser = await User.findOne({ name });
 
       if (existingUser) {
         throw new Error("Username already exists.");
       }
 
-      const existingEmail = await User.findOne({email});
+      const existingEmail = await User.findOne({ email });
 
       if (existingEmail) {
         throw new Error("Email already in use.");
@@ -77,54 +84,50 @@ const resolvers = {
         sheep: 0,
       });
 
-      const user = await newUser.save()
+      const user = await newUser.save();
 
       const res = {
         name: user.name,
         email: user.email,
         id: user.id,
-      }
+      };
 
-      req.session.user = res
+      req.session.user = res;
 
-      return true
+      return true;
     },
 
-    loginUser: async (_, {email, password}, {req}) => {
-      const user = await User.findOne({email});
+    loginUser: async (_, { email, password }, { req }) => {
+      const user = await User.findOne({ email });
 
-      if (!user) {
-        throw new Error("Credentials are incorrect...");
-      }
+      if (!user) throw new Error("Credentials are incorrect...");
 
       const passwordMatch = await bcrypt.compare(password, user.password);
 
-      if (!passwordMatch) {
-        throw new Error("Credentials are incorrect...");
-      }
+      if (!passwordMatch) throw new Error("Credentials are incorrect...");
 
       const res = {
         name: user.name,
         email: user.email,
         id: user.id,
-      }
+      };
 
-      req.session.user = res
+      req.session.user = res;
 
-      return true
+      return true;
     },
 
-    logoutUser: async (_, args, {req}) => {
-      if (!req.session.user) throw new Error('You are not authenticated!')
+    logoutUser: async (_, args, { req }) => {
+      if (!req.session.user) throw new Error("You are not authenticated!");
 
-      req.session.destroy()
+      req.session.destroy();
 
-      return true
+      return true;
     },
 
-    createCard: async (_, {title, text, answer}, {req}) => {
+    createCard: async (_, { title, text, answer }, { req }) => {
       if (!req.session.user) {
-        throw new Error('You are not authenticated!')
+        throw new Error("You are not authenticated!");
       }
 
       const newCard = new Card({
@@ -140,31 +143,54 @@ const resolvers = {
       return await newCard.save();
     },
 
-    deleteCard: async (_, {id}) => {
-      return Card.findOneAndDelete({id})
+    deleteCard: async (_, { id }) => {
+      return Card.findOneAndDelete({ id });
     },
 
-    gameFinished: async (_, {score, wolf, sheep}, {req}) => {
+    gameFinished: async (_, { score, wolf, sheep }, { req }) => {
       if (!req.session.user) {
-        throw new Error('You are not authenticated!')
+        throw new Error("You are not authenticated!");
       }
-      const user = await User.findOne({id: req.session.user.id})
+      const user = await User.findOne({ id: req.session.user.id });
 
-      if (user.highScore > score) return User.findOneAndUpdate({id: req.session.user.id}, {$inc: { wolf: wolf, sheep: sheep }}, {new: true})
-
-      return User.findOneAndUpdate({id: req.session.user.id}, {$inc: {highScore: score, wolf: wolf, sheep: sheep }}, {new: true}) 
+      if (user.highScore > score) {
+        return User.findOneAndUpdate(
+          { id: req.session.user.id },
+          { $inc: { wolf: wolf, sheep: sheep } },
+          { new: true }
+        );
+      } else {
+        return User.findOneAndUpdate(
+          { id: req.session.user.id },
+          { $inc: { wolf: wolf, sheep: sheep }, $set: { highScore: score } },
+          { new: true }
+        );
+      }
     },
 
-    addCardReport: async (_, {id}) => {
-      const card = await Card.findOneAndUpdate({id}, {$inc: {report: 1}}, {new: true})
-      return card
+    addCardReport: async (_, { id }) => {
+      const card = await Card.findOneAndUpdate(
+        { id },
+        { $inc: { report: 1 } },
+        { new: true }
+      );
+      return card;
     },
 
-    addCardAnswer: async (_, {id, bool}) => {
-      if (bool === true) return await Card.findOneAndUpdate({id}, {$inc: {true: 1}}, {new: true})
-      if (bool === false) return await Card.findOneAndUpdate({id}, {$inc: {false: 1}}, {new: true})
+    addCardAnswer: async (_, { id, bool }) => {
+      if (bool === true)
+        return await Card.findOneAndUpdate(
+          { id },
+          { $inc: { true: 1 } },
+          { new: true }
+        );
+      if (bool === false)
+        return await Card.findOneAndUpdate(
+          { id },
+          { $inc: { false: 1 } },
+          { new: true }
+        );
     },
-
   },
 };
 
