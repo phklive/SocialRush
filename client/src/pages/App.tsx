@@ -21,9 +21,10 @@ query Query {
 
 const App = () => {
   const [session, setSession] = useState(false);
+  const uri = "https://api.socialrush.fr";
 
   useEffect(() => {
-    fetch("https://trueorfalseapp.herokuapp.com/graphql", {
+    fetch(uri, {
       method: "POST",
       credentials: "include",
       headers: {
@@ -39,7 +40,7 @@ const App = () => {
   return (
     <>
       <div id="portal" />
-      <AuthContext.Provider value={{ session, setSession }}>
+      <AuthContext.Provider value={{ session, setSession, uri }}>
         <NavBar />
         <Routes>
           <Route element={<ProtectedRoute />}>

@@ -5,23 +5,23 @@ import {
   ApolloClient,
   InMemoryCache,
   ApolloProvider,
-  HttpLink,
-  ApolloLink,
+  // HttpLink,
+  // ApolloLink,
 } from "@apollo/client";
 import "./styles/index.css";
 import App from "./pages/App";
 
-const uri = "https://trueorfalseapp.herokuapp.com/graphql";
+const uri = "https://api.socialrush.fr";
 
-const httpLink = ApolloLink.from([
-  new HttpLink({
-    fetchOptions: {
-      credentials: "include",
-    },
-    uri,
-    credentials: "include",
-  }),
-]);
+// const httpLink = ApolloLink.from([
+//   new HttpLink({
+//     fetchOptions: {
+//       credentials: "include",
+//     },
+//     uri,
+//     credentials: "include",
+//   }),
+// ]);
 
 const cache = new InMemoryCache({
   typePolicies: {
@@ -32,7 +32,8 @@ const cache = new InMemoryCache({
 });
 
 const client = new ApolloClient({
-  link: httpLink,
+  uri,
+  credentials: "include",
   cache,
 });
 

@@ -90,15 +90,6 @@ const NavBar: React.FC = () => {
             </div>
           </>
         )}
-
-        {!session && (
-          <NavLink
-            to="/register"
-            className="text-3xl m-2 absolute top-3 right-2"
-          >
-            Play
-          </NavLink>
-        )}
       </nav>
     </>
   );

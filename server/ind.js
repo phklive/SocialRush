@@ -2,6 +2,7 @@ import express from "express";
 import { graphqlHTTP } from "express-graphql";
 import { makeExecutableSchema } from "@graphql-tools/schema";
 import connectToDB from "./database/db.js";
+import helmet from "helmet";
 import cors from "cors";
 import typeDefs from "./graphql/typeDefs.js";
 import resolvers from "./graphql/resolvers.js";
@@ -18,8 +19,6 @@ const app = express();
 
 connectToDB();
 
-app.set("trust proxy", 1);
-
 app.use(
   session({
     name: "qid",
@@ -27,10 +26,9 @@ app.use(
     resave: false,
     saveUninitialized: false,
     cookie: {
-      domain: process.env.ORIGIN,
-      secure: false,
       httpOnly: true,
-      sameSite: "none",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      secure: process.env.NODE_ENV === "production",
       maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
     },
     store: MongoStore.create({
@@ -55,4 +53,6 @@ app.use(
 );
 
 app.listen(process.env.PORT);
-console.log("Running graphql server at https://api.socialrush.fr");
+console.log(
+  "Running graphql server at https://trueorfalseapp.herokuapp.com/graphql"
+);

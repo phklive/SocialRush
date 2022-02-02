@@ -16,14 +16,14 @@ mutation Mutation {
 const Profile: React.FC = () => {
   const [modal, setModal] = useState(false);
   const navigate = useNavigate();
-  const { setSession } = useContext(AuthContext);
+  const { setSession, uri } = useContext(AuthContext);
 
   const modalHandler = () => {
     setModal((oldstate) => !oldstate);
   };
 
   const logout = () => {
-    fetch("http://localhost:4000/graphql", {
+    fetch(uri, {
       method: "POST",
       credentials: "include",
       headers: {
